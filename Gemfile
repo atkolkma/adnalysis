@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
-
+gem 'smarter_csv'
+gem 'awesome_print'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
