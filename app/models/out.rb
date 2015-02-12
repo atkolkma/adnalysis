@@ -1,10 +1,9 @@
 
 require 'smarter_csv'
 
-class Out
-	def self.out
+class Report
+	def new
 		file = Rails.root + 'data/Search-term-report2.csv'
-		csv = SmarterCSV.process(file, {file_encoding: 'iso-8859-1'})
-		ap csv[3]
+		@table = SmarterCSV.process(file, {file_encoding: 'iso-8859-1'})
 	end
 end

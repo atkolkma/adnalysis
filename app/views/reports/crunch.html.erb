@@ -1,0 +1,16 @@
+<h1>Hello Crunch</h1>
+
+<table>
+	<tr>
+		<% @output[:headers].each do |header| %>
+			<th><%=header.to_s%></th>
+		<%end%>
+	</tr>
+	<% @output[:table].each do |row| %>
+		<tr>
+			<% row.each do |k, v|%>
+				<td><%=v.to_s%></td>
+			<%end%>
+		</tr>
+	<%end%>
+</table>
