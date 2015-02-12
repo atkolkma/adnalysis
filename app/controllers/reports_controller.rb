@@ -2,7 +2,7 @@ class ReportsController < ApplicationController
   before_action :set_report, only: [:show, :edit, :update, :destroy]
 
   def crunch
-    @output = Report.output
+    @output = Report.sort(Report.output)
   end
 
   # GET /reports

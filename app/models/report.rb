@@ -10,7 +10,11 @@ class Report
 		{headers: headers, rows: rows}
 	end
 
-	def self.sort
-		
+	def self.sort(hash_table)
+		rows = hash_table[:rows]
+		rows = rows.sort_by{|e| [-1*e[:impressions], -e["avg._position".to_sym]]}
+		hash_table[:rows] = rows
+		ap hash_table
+		hash_table
 	end
 end
