@@ -3,7 +3,7 @@ class ReportsController < ApplicationController
 
   def crunch
     Report.group(Report.sort(Report.output),"match_type")
-    @output = Report.sort(Report.output)
+    @output = Report.sort(Report.filter_rows(Report.output))
   end
 
   # GET /reports

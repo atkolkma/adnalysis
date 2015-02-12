@@ -12,9 +12,9 @@ class Report
 
 	def self.sort(hash_table)
 		rows = hash_table[:rows]
-		rows = rows.sort_by{|e| [-1*e[:converted_clicks], -e["avg._position".to_sym]]}
+		rows = rows.sort_by{|e| [-1*e[:conversions], e["avg._position".to_sym]]}
 		hash_table[:rows] = rows
-		hash_table[:rows] = rows[0..100]
+		hash_table[:rows] = rows[0..1000]
 		hash_table
 	end
 
@@ -38,8 +38,16 @@ class Report
 		sum
 	end
 
+	def self.filter_rows(report)
+		
+		report[:rows].keep_if do |row|
+			row[:conversions] > 0			
+		end
+		report
+	end
+
 	def self.group_rows(rows, dimension, values)
-		row_groups = []
+		row_groups = Set.new
 		values.each do |value|
 			row_groups << rows.select {|row| row[dimension.to_sym] == value}
 		end
