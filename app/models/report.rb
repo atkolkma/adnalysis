@@ -5,8 +5,12 @@ class Report
 		file = Rails.root + 'data/Search-term-report2.csv'
 		table = SmarterCSV.process(file, {file_encoding: 'iso-8859-1'})
 		
-		table = table[0..100]
-		headers = table[0].keys
-		{headers: headers, table: table}
+		rows = table[0..100]
+		headers = rows[0].keys
+		{headers: headers, rows: rows}
+	end
+
+	def self.sort
+		
 	end
 end

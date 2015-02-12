@@ -6,7 +6,7 @@
 			<th><%=header.to_s%></th>
 		<%end%>
 	</tr>
-	<% @output[:table].each do |row| %>
+	<% @output[:rows].each do |row| %>
 		<tr>
 			<% row.each do |k, v|%>
 				<td><%=v.to_s%></td>
