@@ -2,8 +2,8 @@ class ReportsController < ApplicationController
   before_action :set_report, only: [:show, :edit, :update, :destroy]
 
   def crunch
-    Report.group(Report.sort(Report.output),"match_type")
     @output = Report.sort(Report.filter_rows(Report.output))
+    @metrics = Calculation.high_frequency_n_tuples(1, @output)
   end
 
   # GET /reports

@@ -1,6 +1,10 @@
 <h1>Hello Crunch</h1>
 
 <table>
+	<h2>High frequency 1-tuples: </h2>
+	<%@metrics.each do |m|%>
+	<%=m%><br>
+	<%end%>
 	<tr>
 		<% @output[:headers].each do |header| %>
 			<th><%=header.to_s%></th>
