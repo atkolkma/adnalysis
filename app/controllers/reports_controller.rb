@@ -3,7 +3,7 @@ class ReportsController < ApplicationController
 
   def crunch
     @output = Report.sort(Report.filter_rows(Report.output))
-    @metrics = Calculation.high_frequency_n_tuples(1, @output)
+    @metrics = Calculation.high_frequency_n_tuples(2, @output[:rows])
   end
 
   # GET /reports
