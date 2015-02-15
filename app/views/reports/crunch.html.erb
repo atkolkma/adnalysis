@@ -6,11 +6,11 @@
 	<%=m%><br>
 	<%end%>
 	<tr>
-		<% @output[:headers].each do |header| %>
+		<% @headers.each do |header| %>
 			<th><%=header.to_s%></th>
 		<%end%>
 	</tr>
-	<% @output[:rows].each do |row| %>
+	<% @output.each do |row| %>
 		<tr>
 			<% row.each do |k, v|%>
 				<td><%=v.to_s%></td>

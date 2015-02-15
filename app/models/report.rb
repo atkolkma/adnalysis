@@ -1,6 +1,14 @@
-require 'smarter_csv'
-
 class Report
+
+	def load_data(file_name)
+		file = Rails.root + "data/#{file_name}"
+		report_data = ReportData.new
+		report_data.import(file)
+		@data = report_data
+		@file_name = file_name
+		@headers = @data[0].keys
+	end
+
 	def self.output
 		hash_key_mapping = {
 			match_type: :match_type,
@@ -24,12 +32,18 @@ class Report
 		{headers: headers, rows: rows}
 	end
 
-	def self.sort(hash_table)
-		rows = hash_table[:rows]
-		rows = rows.sort_by{|e| [e[:match_type], -e[:converted_clicks]]}
-		hash_table[:rows] = rows
-		hash_table[:rows] = rows[0..1000]
-		hash_table
+	def data
+		@data
+	end
+
+	def headers
+		@headers
+	end
+
+	def sort
+		@data.sort_by{|e| [e[:match_type], -e[:converted_clicks]]}
+		@data = @data[0..100]
+		self
 	end
 
 	def self.group(hash_table, dimension)
@@ -60,12 +74,11 @@ class Report
 		sum
 	end
 
-	def self.filter_rows(report)
-		
-		report[:rows].keep_if do |row|
+	def filter_rows	
+		@data.keep_if do |row|
 			row[:conversions] > 0			
 		end
-		report
+		self
 	end
 
 	def self.group_rows(rows, dimension, values)

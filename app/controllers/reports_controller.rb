@@ -2,8 +2,12 @@ class ReportsController < ApplicationController
   before_action :set_report, only: [:show, :edit, :update, :destroy]
 
   def crunch
-    @output = Report.sort(Report.filter_rows(Report.output))
-    @metrics = Calculation.frequency_of_unordered_n_tuples(2, @output[:rows])
+    report = Report.new
+    report.load_data('Search_term_report4.csv')
+    @output = report.data.filter_rows.group_by_dimension("match_type").sort
+    @headers = report.headers
+    @metrics = []
+    # @metrics = Calculation.frequency_of_unordered_n_tuples(2, report.data)
   end
 
   # GET /reports
