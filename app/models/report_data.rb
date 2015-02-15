@@ -2,6 +2,7 @@ require 'smarter_csv'
 
 class ReportData < Array
   def initialize
+
     hash_key_mapping = {
       match_type: :match_type,
       search_term: :search_term,
@@ -19,9 +20,18 @@ class ReportData < Array
     super
   end
 
-  def import(file, overwrite_options={})
+  def import(file_names, overwrite_options={})    
+    files = file_names.map{|file_name| Rails.root + "data/#{file_name}"}
+
     @options.merge(overwrite_options)
-    self.replace(SmarterCSV.process(file, @options))
+    if files.length == 1
+      data = SmarterCSV.process(files[0], @options)
+    elsif files.length > 1
+      data = files.map { |file| SmarterCSV.process(file, @options)}.flatten(1)
+    elsif files.length < 1
+      data = []
+    end
+    self.replace(data)
   end
 
   def filter_rows 
@@ -32,34 +42,46 @@ class ReportData < Array
   end
 
   def sort
-    self.sort_by{|e| [e[:match_type], -e[:converted_clicks]]}
-    self[0..100]
+    self.replace(self.sort_by{|e| [-e[:converted_clicks], -(e[:cost].to_f), ]}[0..100])
+    self
+  end
+
+  def headers
+    self[0].keys
   end
 
   ##### Unfinished ####
 
   def group_by_dimension(dimension)
+    dimensions_to_remove = []
+    self[0].each do |key, value|
+      dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
+    end 
+    self.remove_dimensions(dimensions_to_remove)
+
     dimension_values = Set.new
     all_values = self.map{|row| row[dimension.to_sym]}.uniq
     row_groups = group_rows(self, dimension, all_values)
     summed_array = []
-    row_groups.each {|row_group| summed_array << sum_rows(row_group)}
+    row_groups.each {|row_group| summed_array << sum_rows(row_group, dimension)}
     self.replace(summed_array)
   end
 
 
-  # def self.remove_dimensions(report_data, dimensions=[])
-  #   dimensions.each do |dim|
-  #   end
-  # end
+  def remove_dimensions(dimensions=[])
+    self.each do |row|
+      row.delete_if {|k,v| dimensions.include? k}
+    end
+  end
+
 private
 
-  def sum_rows(row_group)
+  def sum_rows(row_group, dimension)
     sum = row_group[0]
-    row_group[1..20].each do |row|
+    row_group[1..-1].each do |row|
       row.map do |k, v|
-        sum[k] += row[k] if sum[k].is_a? Integer
-        sum[k] += row[k] if sum[k].is_a? Integer
+        sum[k] += row[k].to_i if sum[k].is_a? Integer
+        sum[k] = "various" if (sum[k].is_a?(String) && k.to_s != dimension.to_s)
       end
     end
     sum

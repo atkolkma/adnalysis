@@ -1,10 +1,7 @@
-<h1>Hello Crunch</h1>
+<h1><%=@report.name%></h1>
+<h3>From files: <%=@report.file_names.join(", ")%></h3>
 
 <table>
-	<h2>High frequency n-tuples: </h2>
-	<%@metrics.each do |m|%>
-	<%=m%><br>
-	<%end%>
 	<tr>
 		<% @headers.each do |header| %>
 			<th><%=header.to_s%></th>
