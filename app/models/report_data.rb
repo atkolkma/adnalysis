@@ -59,18 +59,20 @@ class ReportData < Array
   ##### Unfinished ####
 
   def group_by_dimension(dimension)
-    dimensions_to_remove = []
-    self[0].each do |key, value|
-      dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
-    end 
-    self.remove_dimensions(dimensions_to_remove)
+    with_benchmark("group by dimension: ") do 
+      dimensions_to_remove = []
+      self[0].each do |key, value|
+        dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
+      end 
+      self.remove_dimensions(dimensions_to_remove)
 
-    dimension_values = Set.new
-    all_values = self.map{|row| row[dimension.to_sym]}.uniq
-    row_groups = group_rows(self, dimension, all_values)
-    summed_array = []
-    row_groups.each {|row_group| summed_array << sum_rows(row_group, dimension)}
-    self.replace(summed_array)
+      dimension_values = Set.new
+      all_values = self.map{|row| row[dimension.to_sym]}.uniq
+      row_groups = group_rows(self, dimension, all_values)
+      summed_array = []
+      row_groups.each {|row_group| summed_array << sum_rows(row_group, dimension)}
+      self.replace(summed_array)
+    end
   end
 
 
@@ -114,6 +116,14 @@ private
       row_groups << rows.select {|row| row[dimension.to_sym] == value}
     end
     row_groups
+  end
+
+  def with_benchmark(msg = "")
+    time1 = Time.now
+      output = yield
+    time2 = Time.now
+    ap msg + (time2 - time1).to_s
+    output
   end
 
 end
