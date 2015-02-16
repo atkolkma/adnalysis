@@ -53,7 +53,7 @@ class ReportData < Array
   end
 
   def headers
-    self[0].keys
+    self[0].keys.map{|key| key.to_s.gsub("_", " ").titleize}
   end
 
   ##### Unfinished ####
