@@ -75,6 +75,26 @@ class ReportData < Array
     end
   end
 
+  def group_by_dimensions(dimensions)  #for only two dimensions number_of_rows
+      dimensions_to_remove = []
+      self[0].each do |key, value|
+        dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.unclude? key.to_s
+      end 
+      self.remove_dimensions(dimensions_to_remove)
+
+      grouping_array = []
+      dimensions.each do |dim|
+        grouping_hash = {}
+        dim_values = self.map{|row| row[dim.to_sym]}.uniq
+        grouping_array << {dimension: dim, values: dim_values}
+      end
+
+      row_groups = multidimension_group_rows(self, grouping_array)
+      summed_array = []
+      row_groups.each {|row_group| summed_array << sum_rows(row_group, dimension)}
+      self.replace(summed_array)
+  end
+
 
   def remove_dimensions(dimensions=[])
     self.each do |row|
@@ -115,6 +135,13 @@ private
     values.each do |value|
       row_groups << rows.select {|row| row[dimension.to_sym] == value}
     end
+    row_groups
+  end
+
+  def multidimension_group_rows(rows, grouping_array) #for only two dimensions now
+    row_groups = Set.new
+    grouping_array.each do |grouping| 
+        row_groups << rows.select {|row| grouping[0][:values].includes? row[grouping[0][:dimension].to_sym] && grouping[1][:values].includes? row[grouping[1][:dimension].to_sym]}
     row_groups
   end
 
