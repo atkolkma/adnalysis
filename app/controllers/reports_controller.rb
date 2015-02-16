@@ -3,10 +3,11 @@ class ReportsController < ApplicationController
 
   def crunch
     report = Report.create(name: "Test Report")
-    report.load_data(['Search_term_report3.csv','Search_term_report4.csv'])
+    report.load_data(['Search_term_report3.csv'])
+    @sort_rules = [{dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
     @report = report
     @report_name = report.name
-    @output = report.data.filter_rows.group_by_dimension("keyword").sort
+    @output = report.data.filter_rows.group_by_dimension("keyword").sort(@sort_rules).truncate(100)
     @headers = @output.headers
     @metrics = []
     # @metrics = Calculation.frequency_of_unordered_n_tuples(2, report.data)

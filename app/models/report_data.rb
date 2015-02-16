@@ -36,13 +36,19 @@ class ReportData < Array
 
   def filter_rows 
     self.keep_if do |row|
-      row[:conversions] > 0     
+      row[:conversions] > 0
     end
     self
   end
 
-  def sort
-    self.replace(self.sort_by{|e| [-e[:converted_clicks], -(e[:cost].to_f), ]}[0..100])
+
+  def sort(arguments_hash)
+    self.replace(self.sort_by{|e| eval sort_array(arguments_hash) }) 
+    self
+  end
+
+  def truncate(number_of_rows)
+    self.replace(self[0..number_of_rows])
     self
   end
 
@@ -76,12 +82,27 @@ class ReportData < Array
 
 private
 
+  def sort_array(sort_rules)
+    string_array = "["
+    sort_rules.map do |rule|
+      rule_string = ""
+      rule_string += "-" if rule[:direction] == "desc"
+      rule_string += "(e[:#{rule[:dimension]}])#{rule[:conversion]},"
+      string_array += rule_string
+    end
+
+    string_array = string_array.chomp(',')
+    string_array += "]"
+    string_array
+
+
+  end
+
   def sum_rows(row_group, dimension)
     sum = row_group[0]
     row_group[1..-1].each do |row|
       row.map do |k, v|
         sum[k] += row[k].to_i if sum[k].is_a? Integer
-        sum[k] = "various" if (sum[k].is_a?(String) && k.to_s != dimension.to_s)
       end
     end
     sum
