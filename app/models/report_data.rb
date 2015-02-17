@@ -70,16 +70,18 @@ class ReportData < Array
       all_values = self.map{|row| row[dimension.to_sym]}.uniq
       row_groups = group_rows(self, dimension, all_values)
       summed_array = []
-      row_groups.each {|row_group| summed_array << sum_rows(row_group, dimension)}
+      row_groups.each {|row_group| summed_array << sum_rows(row_group)}
       self.replace(summed_array)
     end
   end
 
   def group_by_dimensions(dimensions)  #for only two dimensions number_of_rows
       dimensions_to_remove = []
+
       self[0].each do |key, value|
-        dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.unclude? key.to_s
-      end 
+        dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.include?(key.to_s)
+      end
+
       self.remove_dimensions(dimensions_to_remove)
 
       grouping_array = []
@@ -89,9 +91,12 @@ class ReportData < Array
         grouping_array << {dimension: dim, values: dim_values}
       end
 
-      row_groups = multidimension_group_rows(self, grouping_array)
+      p "grouping_array: "
+      ap grouping_array
+
       summed_array = []
-      row_groups.each {|row_group| summed_array << sum_rows(row_group, dimension)}
+      row_groups = two_dimension_group_rows(self, grouping_array)
+      row_groups.each {|row_group| summed_array << sum_rows(row_group) if row_group}
       self.replace(summed_array)
   end
 
@@ -120,14 +125,20 @@ private
 
   end
 
-  def sum_rows(row_group, dimension)
-    sum = row_group[0]
-    row_group[1..-1].each do |row|
-      row.map do |k, v|
-        sum[k] += row[k].to_i if sum[k].is_a? Integer
+  def sum_rows(row_group)
+    p "row_group: " 
+    ap row_group
+    if row_group && row_group.length > 1
+      sum = row_group[0]
+      row_group[1..-1].each do |row|
+        row.map do |k, v|
+          sum[k] += row[k].to_i if sum[k].is_a? Integer
+        end
       end
+      sum
+    else
+      []
     end
-    sum
   end
 
   def group_rows(rows, dimension, values)
@@ -138,10 +149,15 @@ private
     row_groups
   end
 
-  def multidimension_group_rows(rows, grouping_array) #for only two dimensions now
+  def two_dimension_group_rows(rows, grouping_array) #for only two dimensions now
     row_groups = Set.new
-    grouping_array.each do |grouping| 
-        row_groups << rows.select {|row| grouping[0][:values].includes? row[grouping[0][:dimension].to_sym] && grouping[1][:values].includes? row[grouping[1][:dimension].to_sym]}
+    outer_dimension = grouping_array[0][:dimension]
+    inner_dimension = grouping_array[1][:dimension]
+    grouping_array[0][:values].each do |outer_value|
+      grouping_array[1][:values].each do |inner_value|
+        row_groups << rows.select {|row| row[outer_dimension.to_sym] == outer_value && row[inner_dimension.to_sym] == inner_value}
+      end
+    end
     row_groups
   end
 

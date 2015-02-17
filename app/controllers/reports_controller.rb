@@ -7,7 +7,7 @@ class ReportsController < ApplicationController
     @sort_rules = [{dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
     @report = report
     @report_name = report.name
-    @output = report.data.filter_rows.group_by_dimension("search_term").sort(@sort_rules).truncate(100)
+    @output = report.data.filter_rows.group_by_dimension("match_type").sort(@sort_rules).truncate(100)
     @headers = @output.headers
     @metrics = []
     # @metrics = Calculation.frequency_of_unordered_n_tuples(2, report.data)
