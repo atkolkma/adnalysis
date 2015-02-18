@@ -14,7 +14,9 @@ class ReportData < Array
       cost: :cost,
       keyword: :keyword,
       converted_clicks: :converted_clicks,
-      conversions: :conversions
+      conversions: :conversions,
+      "total_conv._value".to_sym => :total_conv_value,
+
     }
     @options = {file_encoding: 'iso-8859-1', key_mapping: hash_key_mapping, remove_unmapped_keys: true}
     super
@@ -66,7 +68,6 @@ class ReportData < Array
       end 
       self.remove_dimensions(dimensions_to_remove)
 
-      dimension_values = Set.new
       all_values = self.map{|row| row[dimension.to_sym]}.uniq
       row_groups = group_rows(self, dimension, all_values)
       summed_array = []
@@ -77,16 +78,13 @@ class ReportData < Array
 
   def group_by_dimensions(dimensions)  #for only two dimensions number_of_rows
       dimensions_to_remove = []
-
       self[0].each do |key, value|
         dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.include?(key.to_s)
       end
-
       self.remove_dimensions(dimensions_to_remove)
 
       grouping_array = []
       dimensions.each do |dim|
-        grouping_hash = {}
         dim_values = self.map{|row| row[dim.to_sym]}.uniq
         grouping_array << {dimension: dim, values: dim_values}
       end
@@ -96,7 +94,10 @@ class ReportData < Array
 
       summed_array = []
       row_groups = two_dimension_group_rows(self, grouping_array)
-      row_groups.each {|row_group| summed_array << sum_rows(row_group) if row_group}
+      row_groups.each do |row_group| 
+        summed_row = sum_rows(row_group)
+        summed_array << summed_row unless summed_row == []
+      end
       self.replace(summed_array)
   end
 
@@ -133,8 +134,12 @@ private
       row_group[1..-1].each do |row|
         row.map do |k, v|
           sum[k] += row[k].to_i if sum[k].is_a? Integer
+          sum[k] += row[k].to_f if k == :cost
+          sum[k] = "n/a" if k == :cpc
         end
       end
+      sum.each {|k, v| sum[k] = v.round(2) if v.is_a?(Float)}
+      sum[:cpc] = (sum[:cost] / sum[:clicks].to_f).round(2)
       sum
     else
       []
