@@ -1,17 +1,22 @@
 <h1>Crunch: <%=@report.name%></h1>
-<h3>From files: <%=@report.file_names.join(", ")%></h3>
+<h3>From files: <%=(@report.source_files || []).join(", ")%></h3>
 
 <table>
 	<tr>
-		<% @headers.each do |header| %>
+	<% if @report.data && @report.source_files %>
+		<% @report.data.headers.each do |header| %>
 			<th><%=header.to_s%></th>
 		<%end%>
-	</tr>
-	<% @output.each do |row| %>
-		<tr>
-			<% row.each do |k, v|%>
-				<td><%=v.to_s%></td>
-			<%end%>
 		</tr>
-	<%end%>
+		<% @report.data.each do |row| %>
+			<tr>
+				<% row.each do |k, v|%>
+					<td><%=v.to_s%></td>
+				<%end%>
+			</tr>
+		<%end%>
+	<% else %>
+		<h2>No Data Loaded</h2>
+			<%= link_to "Choose source files", edit_path %>
+	<% end %>
 </table>
