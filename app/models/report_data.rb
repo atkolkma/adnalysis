@@ -89,9 +89,6 @@ class ReportData < Array
         grouping_array << {dimension: dim, values: dim_values}
       end
 
-      p "grouping_array: "
-      ap grouping_array
-
       summed_array = []
       row_groups = two_dimension_group_rows(self, grouping_array)
       row_groups.each do |row_group| 

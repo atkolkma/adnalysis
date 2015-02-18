@@ -1,13 +1,13 @@
 class ReportsController < ApplicationController
   before_action :set_report, only: [:show, :edit, :update, :destroy]
+  before_filter :normalize_source_files_params, :only => [:create, :update, :edit]
 
   def crunch
-    report = Report.create(name: "Test Report")
-    report.load_data(['Search_term_report5.csv'])
+    @report = Report.find(params[:id])
+    @report.load_data
     @sort_rules = [{dimension: 'adgroup', direction: "asc"}, {dimension: 'match_type', direction: "asc"}, {dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
-    @report = report
-    @report_name = report.name
-    @output = report.data.filter_rows.group_by_dimensions(["adgroup", "match_type"]).sort(@sort_rules).truncate(100)
+    @report_name = @report.name
+    @output = @report.data.filter_rows.group_by_dimensions(["adgroup", "match_type"]).sort(@sort_rules).truncate(100)
     @headers = @output.headers
     @metrics = []
     # @metrics = Calculation.frequency_of_unordered_n_tuples(2, report.data)
@@ -36,6 +36,9 @@ class ReportsController < ApplicationController
   # POST /reports
   # POST /reports.json
   def create
+    report_params[:source_files] = ['asdads']
+
+    ap report_params
     @report = Report.new(report_params)
 
     respond_to do |format|
@@ -53,6 +56,8 @@ class ReportsController < ApplicationController
   # PATCH/PUT /reports/1.json
   def update
     respond_to do |format|
+    report_params[:source_files] = ['asdads']
+      
       if @report.update(report_params)
         format.html { redirect_to @report, notice: 'Report was successfully updated.' }
         format.json { render :show, status: :ok, location: @report }
@@ -74,13 +79,20 @@ class ReportsController < ApplicationController
   end
 
   private
+    def report_params
+      params.require(:report).permit(:name, source_files: [])
+    end
+
+    def normalize_source_files_params
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_report
       @report = Report.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def report_params
-      params[:report]
-    end
+    # # Never trust parameters from the scary internet, only allow the white list through.
+    # def report_params
+    #   params[:report]
+    # end
 end
