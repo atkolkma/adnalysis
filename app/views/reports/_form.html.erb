@@ -12,12 +12,13 @@
   <% end %>
 
   <%= f.label :name %>:
-  <%= f.text_field :name %><br />
-
-  <%= f.label :source_files %>:<br>
-  <%= f.check_box( :source_files, {multiple: true}, 'Search_term_report4.csv' )%>Search_term_report4.csv<br />
-  <%= f.check_box( :source_files, {multiple: true}, 'Search_term_report3.csv' )%>Search_term_report3.csv<br />
-  <%= f.check_box( :source_files, {multiple: true}, 'Search-term-report2.csv' )%>Search-term-report2.csv<br />
+  <%= f.text_field :name %><br /> <br>
+  <%= f.label :data_set %>:
+  <%= select("report", "data_set_id", DataSet.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false })
+%> <br><br>  
+<%= f.label :crunch_algorithm %>:
+  <%= select("report", "crunch_algorithm_id", CrunchAlgorithm.all.collect {|ca| [ ca.name, ca.id ] }, { :include_blank => false })
+%> <br><br>
 
   <div class="actions">
     <%= f.submit %>

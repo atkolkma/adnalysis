@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :crunch_algorithms
+
+  resources :data_sets
+
   resources :reports
 
   root 'reports#index'

@@ -1,0 +1,29 @@
+<%= form_for(@crunch_algorithm) do |f| %>
+  <% if @crunch_algorithm.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@crunch_algorithm.errors.count, "error") %> prohibited this crunch_algorithm from being saved:</h2>
+
+      <ul>
+      <% @crunch_algorithm.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :functions %><br>
+    <%= f.text_field :functions %>
+  </div>
+  <div class="field">
+    <%= f.label :category %><br>
+    <%= f.text_field :category %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

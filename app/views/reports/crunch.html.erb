@@ -1,9 +1,10 @@
-<h1>Crunch: <%=@report.name%></h1>
-<h3>From files: <%=(@report.source_files || []).join(", ")%></h3>
+<h1>Crunch: <%=@report.name.titleize%></h1>
+<h3>From data set: "<%=@report.data_set.name.titleize%>"</h3>
+<h3>Crunched w/ Algorithm: "<%=@report.crunch_algorithm ? @report.crunch_algorithm.name.titleize : "None Selected"%>"</h3>
 
 <table>
 	<tr>
-	<% if @report.data && @report.source_files %>
+	<% if @report.data%>
 		<% @report.data.headers.each do |header| %>
 			<th><%=header.to_s%></th>
 		<%end%>

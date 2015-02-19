@@ -4,7 +4,7 @@ class ReportsController < ApplicationController
 
   def crunch
     @report = Report.find(params[:id])
-    @report.load_data unless @report.data
+    @report.load_data
     @sort_rules = [{dimension: 'adgroup', direction: "asc"}, {dimension: 'match_type', direction: "asc"}, {dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
     @report_name = @report.name
     @report.data ? @output = @report.data.filter_rows.group_by_dimensions(["adgroup", "match_type"]).sort(@sort_rules).truncate(100) : @output =  
@@ -79,7 +79,7 @@ class ReportsController < ApplicationController
 
   private
     def report_params
-      params.require(:report).permit(:name, source_files: [])
+      params.require(:report).permit(:name, :data_set_id, :crunch_algorithm_id)
     end
 
     def normalize_source_files_params

@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @crunch_algorithm.name %>
+</p>
+
+<p>
+  <strong>Functions:</strong>
+  <%= @crunch_algorithm.functions %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @crunch_algorithm.category %>
+</p>
+
+
+<%= link_to 'Edit', edit_crunch_algorithm_path(@crunch_algorithm) %> |
+<%= link_to 'Back', crunch_algorithms_path %>
