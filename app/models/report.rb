@@ -1,6 +1,7 @@
 class Report < ActiveRecord::Base
 	belongs_to :data_set
 	belongs_to :crunch_algorithm
+	serialize :report_preview_rows
 
 	def load_data
 		file_names = data_set.source_files

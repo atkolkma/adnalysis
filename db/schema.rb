@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150219010708) do
+ActiveRecord::Schema.define(version: 20150219180007) do
 
   create_table "crunch_algorithms", force: :cascade do |t|
     t.string   "name"
@@ -33,10 +33,10 @@ ActiveRecord::Schema.define(version: 20150219010708) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.string   "name"
-    t.string   "function_compositions"
     t.integer  "functional_composition_id"
     t.integer  "data_set_id"
     t.integer  "crunch_algorithm_id"
+    t.string   "report_preview_rows"
   end
 
 end

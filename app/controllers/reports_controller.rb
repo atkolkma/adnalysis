@@ -7,7 +7,8 @@ class ReportsController < ApplicationController
     @report.load_data
     @sort_rules = [{dimension: 'adgroup', direction: "asc"}, {dimension: 'match_type', direction: "asc"}, {dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
     @report_name = @report.name
-    @report.data ? @output = @report.data.filter_rows.group_by_dimensions(["adgroup", "match_type"]).sort(@sort_rules).truncate(100) : @output =  
+    @report.report_preview_rows = @report.data.filter_rows.group_by_dimensions(["adgroup", "match_type"]).sort(@sort_rules).truncate(100)
+    @report.save
     @metrics = []
     # @metrics = Calculation.frequency_of_unordered_n_tuples(2, report.data)
   end
@@ -21,6 +22,7 @@ class ReportsController < ApplicationController
   # GET /reports/1
   # GET /reports/1.json
   def show
+    @report.data
   end
 
   # GET /reports/new
