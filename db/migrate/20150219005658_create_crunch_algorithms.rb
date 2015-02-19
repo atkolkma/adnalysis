@@ -1,7 +1,5 @@
 class CreateCrunchAlgorithms < ActiveRecord::Migration
   def change
-    drop_table :functional_compositions
-
     create_table :crunch_algorithms do |t|
       t.string :name
       t.string :functions

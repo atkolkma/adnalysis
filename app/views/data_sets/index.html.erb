@@ -2,7 +2,7 @@
 
 <h1>Listing Data Sets</h1>
 
-<table>
+<table class= "table table-striped">
   <thead>
     <tr>
       <th>Name</th>
@@ -15,7 +15,7 @@
     <% @data_sets.each do |data_set| %>
       <tr>
         <td><%= data_set.name %></td>
-        <td><%= data_set.source_files %></td>
+        <td><%= data_set.source_files.join(", ") if data_set.source_files %></td>
         <td><%= link_to 'Show', data_set %></td>
         <td><%= link_to 'Edit', edit_data_set_path(data_set) %></td>
         <td><%= link_to 'Destroy', data_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
