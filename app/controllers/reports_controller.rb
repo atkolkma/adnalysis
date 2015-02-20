@@ -5,11 +5,11 @@ class ReportsController < ApplicationController
   def crunch
     @report = Report.find(params[:id])
     @report.load_data
-    @sort_rules = [{dimension: 'adgroup', direction: "asc"}, {dimension: 'match_type', direction: "asc"}, {dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
+    @sort_rules = [{dimension: 'adgroup', direction: "asc"}, {dimension: 'match_type', direction: "desc"}, {dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
     @report_name = @report.name
-    @report.report_preview_rows = @report.data.filter_rows.group_by_dimensions(["adgroup", "match_type"]).sort(@sort_rules).truncate(100)
+    @report.report_preview_rows = @report.data.filter_rows.group_by_dimensions(["adgroup", "match_type"]).sort_by_dim(@sort_rules).truncate(100).to_a 
     @report.save
-    @metrics = []
+    puts @report.report_preview_rows  
     # @metrics = Calculation.frequency_of_unordered_n_tuples(2, report.data)
   end
 
@@ -22,7 +22,7 @@ class ReportsController < ApplicationController
   # GET /reports/1
   # GET /reports/1.json
   def show
-    @report.data
+    puts @report.report_preview_rows
   end
 
   # GET /reports/new
@@ -81,7 +81,7 @@ class ReportsController < ApplicationController
 
   private
     def report_params
-      params.require(:report).permit(:name, :data_set_id, :crunch_algorithm_id)
+      params.require(:report).permit(:name, :data_set_id, :crunch_algorithm_id, :report_preview_rows)
     end
 
     def normalize_source_files_params

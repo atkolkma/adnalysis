@@ -4,7 +4,7 @@ class Report < ActiveRecord::Base
 	serialize :report_preview_rows
 
 	def load_data
-		file_names = data_set.source_files
+		@file_names = data_set.source_files
 		# file_names = [file_names] if file_names.is_a?(String)
 		
 		report_data = ReportData.new

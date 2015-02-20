@@ -44,10 +44,41 @@ class ReportData < Array
   end
 
 
-  def sort(arguments_hash)
-    self.replace(self.sort_by{|e| eval sort_array(arguments_hash) }) 
+  def sort_by_dim(arguments)
+    self.replace(self.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }) 
     self
   end
+
+  @@sorting_arrays = lambda do |x,y,rules_hash|
+    higher_array = []
+    lower_array = []
+    
+    rules_hash.map do |rule|
+      if rule[:direction] == "desc"
+        lower_array << x[rule[:dimension].to_sym]
+        higher_array << y[rule[:dimension].to_sym]
+      else
+        higher_array << x[rule[:dimension].to_sym]
+        lower_array << y[rule[:dimension].to_sym]
+      end
+    end
+    higher_array <=> lower_array
+  end
+
+  # def sort(arguments_hash)
+  #   self.replace(self.sort_by{|e| @@sorting_array.call(e, arguments_hash) }) 
+  #   self
+  # end
+
+  # @@sorting_array = lambda do |e, rules_hash|
+  #   rules_hash.map do |rule|
+  #     if rule[:direction] == "desc"
+  #       -1*(e[rule[:dimension].to_sym])
+  #     else
+  #       e[rule[:dimension].to_sym]
+  #     end
+  #   end
+  # end
 
   def truncate(number_of_rows)
     self.replace(self[0..number_of_rows])
@@ -124,8 +155,6 @@ private
   end
 
   def sum_rows(row_group)
-    p "row_group: " 
-    ap row_group
     if row_group && row_group.length > 1
       sum = row_group[0]
       row_group[1..-1].each do |row|
