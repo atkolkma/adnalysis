@@ -7,7 +7,12 @@
 
 <p>
   <strong>Functions:</strong>
-  <%= @crunch_algorithm.functions %>
+    <div style="margin-left: 3em">
+      <% @crunch_algorithm.functions.each do |f| %>
+        <b><%= f[:name] %></b><br>
+        <b>arguments:</b> <%= f[:args] %><br><br>
+      <% end %>
+    </div>
 </p>
 
 <p>
