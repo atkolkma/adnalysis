@@ -1,16 +1,13 @@
 class ReportsController < ApplicationController
-  before_action :set_report, only: [:show, :edit, :update, :destroy]
+  before_action :set_report, only: [:show, :edit, :update, :destroy, :crunch]
   before_filter :normalize_source_files_params, :only => [:create, :update, :edit]
 
   def crunch
-    @report = Report.find(params[:id])
     @report.load_data
     @sort_rules = [{dimension: 'adgroup', direction: "asc"}, {dimension: 'match_type', direction: "desc"}, {dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
-    @report_name = @report.name
-    @report.report_preview_rows = @report.data.filter_rows.group_by_dimensions(["adgroup", "match_type"]).sort_by_dim(@sort_rules).truncate(100).to_a 
+    
+    @report.report_preview_rows = ReportCruncher.truncate(ReportCruncher.sort_by_dim(ReportCruncher.group_by_dimensions(ReportCruncher.filter_rows(@report.data), ["adgroup", "match_type"]), @sort_rules),100)
     @report.save
-    puts @report.report_preview_rows  
-    # @metrics = Calculation.frequency_of_unordered_n_tuples(2, report.data)
   end
 
   # GET /reports
@@ -22,7 +19,6 @@ class ReportsController < ApplicationController
   # GET /reports/1
   # GET /reports/1.json
   def show
-    puts @report.report_preview_rows
   end
 
   # GET /reports/new
