@@ -1,8 +1,15 @@
 module ReportCruncher
 
-  def self.filter_rows(ary)
+  def self.crunch(ary, functions)
+    functions.each do |f|
+      ary = self.send(f[:name], ary, f[:args])
+    end
+    ary
+  end
+
+  def self.filter_rows(ary, num)
     ary.keep_if do |row|
-      row[:conversions] > 0
+      row[:conversions] > num
     end
   end
 

@@ -5,8 +5,9 @@ class ReportsController < ApplicationController
   def crunch
     @report.load_data
     @sort_rules = [{dimension: 'adgroup', direction: "asc"}, {dimension: 'match_type', direction: "desc"}, {dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
+    @algorithm = [{name: :filter_rows, args: 0},{name: :group_by_dimensions, args: ["adgroup", "match_type"]},{name: :sort_by_dim, args: @sort_rules},{name: :truncate, args: 100}]
     
-    @report.report_preview_rows = ReportCruncher.truncate(ReportCruncher.sort_by_dim(ReportCruncher.group_by_dimensions(ReportCruncher.filter_rows(@report.data), ["adgroup", "match_type"]), @sort_rules),100)
+    @report.report_preview_rows = ReportCruncher.crunch(@report.data, @algorithm) #ReportCruncher.truncate(ReportCruncher.sort_by_dim(ReportCruncher.group_by_dimensions(ReportCruncher.filter_rows(@report.data, 0), ["adgroup", "match_type"]), @sort_rules),100)
     @report.save
   end
 
