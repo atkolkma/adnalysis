@@ -1,10 +1,11 @@
 <p id="notice"><%= notice %></p>
 <h1><%= @report.name %></h1>
-<h4><b>Data set:</b> <%= @report.data_set.name %><br>
-<b>From files:</b> <%=  @report.data_set.source_files ? @report.data_set.source_files.join(', ') : "none"%></h4>
+<h4><b>Data set:</b> <%= @report.data_set.name %><br></h4>
 <h4><b>Crunch Algorithm</b>: <i><%= @report.crunch_algorithm ? @report.crunch_algorithm.name : "none"%></i></h4>
-<h2>Report Preview</h2>
-(cached from last crunch) <br><br>
+<%= link_to 'Recrunch', crunch_path(@report) %> |
+<%= link_to 'Edit', edit_report_path(@report) %> |
+<%= link_to 'Reports Index', reports_path %>
+<h5>Report Preview (cached from last crunch) </h5>
 
 <table class="table table-striped">
 	<tr>
@@ -26,6 +27,3 @@
 	<% end %>
 </table>
 
-<%= link_to 'crunch', crunch_path(@report) %> |
-<%= link_to 'Edit', edit_report_path(@report) %> |
-<%= link_to 'Back', reports_path %>
