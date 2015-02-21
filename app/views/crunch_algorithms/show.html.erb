@@ -6,19 +6,28 @@
 </p>
 
 <p>
-  <strong>Functions:</strong>
-    <div style="margin-left: 3em">
-      <% @crunch_algorithm.functions.each do |f| %>
-        <b><%= f[:name] %></b><br>
-        <b>arguments:</b> <%= f[:args] %><br><br>
-      <% end %>
+  <strong>Type:</strong>
+    <%= @crunch_algorithm.category %>
+</p>
+
+<p>
+  <strong>Column Mappings:</strong>
+    <div style="margin-left: 2em">
+    <% @crunch_algorithm.column_mappings.each do |k,v| %>
+      <b><%= k.to_s%></b> => <%=v.to_s%> <br>
+    <% end %>
     </div>
 </p>
 
 <p>
-  <strong>Type:</strong>
-  <%= @crunch_algorithm.category %>
+  <strong>Functions:</strong>
+    <div style="margin-left: 2em">
+      <% @crunch_algorithm.functions.each do |f| %>
+        <b><%= f[:name] %></b> ( <%= [f[:args]].flatten.join(', ') %> )<br>
+      <% end %>
+    </div>
 </p>
+
 
 
 <%= link_to 'Edit', edit_crunch_algorithm_path(@crunch_algorithm) %> |

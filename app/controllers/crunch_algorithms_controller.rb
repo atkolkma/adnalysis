@@ -1,3 +1,5 @@
+require 'json'
+
 class CrunchAlgorithmsController < ApplicationController
   before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy]
 
@@ -19,6 +21,7 @@ class CrunchAlgorithmsController < ApplicationController
 
   # GET /crunch_algorithms/1/edit
   def edit
+    @allowed_functions = CrunchAlgorithm::ALLOWED_FUNCTIONS
   end
 
   # POST /crunch_algorithms
@@ -40,6 +43,12 @@ class CrunchAlgorithmsController < ApplicationController
   # PATCH/PUT /crunch_algorithms/1
   # PATCH/PUT /crunch_algorithms/1.json
   def update
+    functions = params[:functions]
+    parsed_functions = []
+    functions.each do |number, func|
+      parsed_functions << {name: func[:name].to_sym, args: eval(func[:args])} if func[:name] != ""
+    end
+    @crunch_algorithm.functions = parsed_functions
     respond_to do |format|
       if @crunch_algorithm.update(crunch_algorithm_params)
         format.html { redirect_to @crunch_algorithm, notice: 'Crunch algorithm was successfully updated.' }
@@ -69,6 +78,6 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id)
+      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id, :column_mappings)
     end
 end
