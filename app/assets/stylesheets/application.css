@@ -14,3 +14,15 @@
  *= require_self
  *= require bootstrap/dist/css/bootstrap
  */
+
+.progress {
+  max-width: 600px;
+  margin:    0.2em 0 0.2em 0;
+}
+
+.progress .bar {
+  height:  1.2em;
+  padding: 0.2em;
+  color:   white;
+  display: none;
+}

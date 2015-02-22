@@ -1,4 +1,4 @@
-<%= form_for(@data_set) do |f| %>
+<%= form_for(@data_set, html: { class: "directUpload" }) do |f| %>
   <% if @data_set.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@data_set.errors.count, "error") %> prohibited this data_set from being saved:</h2>
@@ -14,6 +14,11 @@
   <%= f.label :name %><br>
   <%= f.text_field :name %><br>
 
+  <div class="field">
+    <%= f.label :remote_source_files %><br>
+    <%= f.file_field :remote_source_files %>
+  </div>
+
   <%= f.label :source_files %>:<br>
   <%= f.check_box( :source_files, {multiple: true}, 'Search_term_report4.csv' )%>Search_term_report4.csv<br />
   <%= f.check_box( :source_files, {multiple: true}, 'Search_term_report3.csv' )%>Search_term_report3.csv<br />
@@ -25,3 +30,4 @@
     <%= f.submit %>
   </div>
 <% end %>
+
