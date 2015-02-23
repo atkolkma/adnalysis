@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @source_file.name %>
+</p>
+
+<p>
+  <strong>Data Set:</strong>
+    <%= @source_file.data_set.name %>
+</p>
+
+<%= link_to 'Edit', edit_source_file_path(@source_file) %> |
+<%= link_to 'Back', source_files_path %>

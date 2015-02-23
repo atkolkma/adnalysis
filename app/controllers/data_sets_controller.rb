@@ -14,7 +14,7 @@ class DataSetsController < ApplicationController
 
   # GET /data_sets/new
   def new
-    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/${filename}", success_action_status: 201, acl: :public_read)
+    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/new/${filename}", success_action_status: 201, acl: :public_read)
     @data_set = DataSet.new
   end
 

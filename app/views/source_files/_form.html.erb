@@ -1,0 +1,27 @@
+<%= form_for(@source_file) do |f| %>
+  <% if @source_file.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@source_file.errors.count, "error") %> prohibited this source_file from being saved:</h2>
+
+      <ul>
+      <% @source_file.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h2>Chose a file:</h2>
+  <div class="field">
+    <%= f.label :remote_source_files %><br>
+    <%= f.file_field :name %>
+  </div>
+
+  <%= f.label :data_set %>:
+  <%= select("source_file", "data_set_id", DataSet.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false })
+%> <br><br>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
