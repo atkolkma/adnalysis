@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   root 'reports#index'
 
   get 'reports/:id/crunch', to: 'reports#crunch', as: 'crunch' 
+  get 'append_source_files/:id', to: 'data_sets#append_source_files', as: 'append_source_files' 
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

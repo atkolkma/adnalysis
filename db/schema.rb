@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150221011659) do
+ActiveRecord::Schema.define(version: 20150222193334) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "crunch_algorithms", force: :cascade do |t|
     t.string   "name"
@@ -28,6 +31,7 @@ ActiveRecord::Schema.define(version: 20150221011659) do
     t.string   "source_files"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.json     "files"
   end
 
   create_table "reports", force: :cascade do |t|
@@ -41,4 +45,5 @@ ActiveRecord::Schema.define(version: 20150221011659) do
     t.string   "report_preview_rows"
   end
 
+  add_foreign_key "reports", "crunch_algorithms"
 end

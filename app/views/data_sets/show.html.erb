@@ -7,7 +7,9 @@
 
 <p>
   <strong>Source files:</strong>
-	<%=  @data_set.source_files ? @data_set.source_files.join(', ') : "none"%>
+	<%=  @data_set.source_files.each do |sf|%>
+    <%= sf.url %> <br>
+  <% end %>
 </p>
 
 <%= link_to 'Edit', edit_data_set_path(@data_set) %> |

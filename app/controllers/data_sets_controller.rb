@@ -1,5 +1,5 @@
 class DataSetsController < ApplicationController
-  before_action :set_data_set, only: [:show, :edit, :update, :destroy]
+  before_action :set_data_set, only: [:show, :edit, :update, :destroy, :append_source_files]
 
   # GET /data_sets
   # GET /data_sets.json
@@ -19,6 +19,9 @@ class DataSetsController < ApplicationController
 
   # GET /data_sets/1/edit
   def edit
+  end
+
+  def append_source_files
   end
 
   # POST /data_sets
