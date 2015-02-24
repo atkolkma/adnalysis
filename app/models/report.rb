@@ -19,6 +19,6 @@ class Report < ActiveRecord::Base
 	end
 
 	def file_names
-		data_set.source_files
+		data_set.source_files.map{|sf| sf.remote_path}
 	end
 end

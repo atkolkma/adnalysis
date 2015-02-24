@@ -15,7 +15,11 @@
     <% @data_sets.each do |data_set| %>
       <tr>
         <td><%= data_set.name %></td>
-        <td></td>
+        <td>
+          <% data_set.source_files.each do |sf| %>
+            <%= sf.name %> <br>
+          <% end %>
+        </td>
         <td><%= link_to 'Show', data_set %></td>
         <td><%= link_to 'Edit', edit_data_set_path(data_set) %></td>
         <td><%= link_to 'Destroy', data_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>

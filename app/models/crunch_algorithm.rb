@@ -7,7 +7,7 @@ class CrunchAlgorithm < ActiveRecord::Base
   @@group_by_dimensions_input = ""
   @@sort_by_dim_input = ""
   @@truncate_input = ""
-  
+
   ALLOWED_FUNCTIONS = [
     {name: "filter_rows", form_input: @@filter_rows_input},
     {name: "group_by_dimensions", form_input: @@group_by_dimensions_input},

@@ -16,7 +16,10 @@ class CrunchAlgorithmsController < ApplicationController
 
   # GET /crunch_algorithms/new
   def new
+    @allowed_functions = CrunchAlgorithm::ALLOWED_FUNCTIONS
     @crunch_algorithm = CrunchAlgorithm.new
+    @crunch_algorithm.column_mappings = []
+    @crunch_algorithm.functions = []
   end
 
   # GET /crunch_algorithms/1/edit

@@ -20,7 +20,7 @@ module ReportLoader
     @@options = {file_encoding: 'iso-8859-1', key_mapping: @@hash_key_mapping, remove_unmapped_keys: true}
 
   def self.load_data(file_names, overwrite_options={})    
-    files = file_names.map{|file_name| Rails.root + "data/#{file_name}"}
+    files = file_names
 
     @@options.merge(overwrite_options)
     if files.length == 1
