@@ -42,10 +42,10 @@
 
             // extract key and generate URL from response
             var key   = $(data.jqXHR.responseXML).find("Key").text();
-            var url   = '//<%= @s3_direct_post.url.host %>/' + key;
+            var url   = 'http://<%= @s3_direct_post.url.host %>/' + key;
 
             // create hidden field
-            var input = $("<input />", { type:'hidden', name: fileInput.attr('name'), value: url })
+            var input = $("<input />", { type:'hidden', name: 'source_file[remote_path]', value: url })
             form.append(input);
           },
           fail: function(e, data) {

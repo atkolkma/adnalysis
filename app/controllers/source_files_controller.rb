@@ -70,6 +70,6 @@ class SourceFilesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def source_file_params
-      params.require(:source_file).permit(:name, :data_set_id)
+      params.require(:source_file).permit(:name, :data_set_id, :remote_path)
     end
 end
