@@ -1,5 +1,6 @@
 class SourceFilesController < ApplicationController
   before_action :set_source_file, only: [:show, :edit, :update, :destroy]
+  before_action :delete_from_s3, only: [:destroy]
 
   # GET /source_files
   # GET /source_files.json
@@ -66,6 +67,13 @@ class SourceFilesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_source_file
       @source_file = SourceFile.find(params[:id])
+    end
+
+    def delete_from_s3
+      @source_file = SourceFile.find(params[:id])
+      s3 = AWS::S3.new
+      obj = s3.buckets[@source_file.s3_bucket].objects[@source_file.s3_key]
+      obj.delete
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

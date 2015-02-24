@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150223174327) do
+ActiveRecord::Schema.define(version: 20150224181917) do
 
   create_table "crunch_algorithms", force: :cascade do |t|
     t.string   "name"
@@ -25,15 +25,15 @@ ActiveRecord::Schema.define(version: 20150223174327) do
 
   create_table "data_sets", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "source_files"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "reports", force: :cascade do |t|
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.string   "name"
-    t.string   "function_compositions"
     t.integer  "functional_composition_id"
     t.integer  "data_set_id"
     t.integer  "crunch_algorithm_id"
@@ -41,12 +41,10 @@ ActiveRecord::Schema.define(version: 20150223174327) do
   end
 
   create_table "source_files", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "data_set_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "file"
     t.string   "remote_path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "data_set_id"
   end
 
 end

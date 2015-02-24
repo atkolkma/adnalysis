@@ -1,5 +1,9 @@
 class AddRemotePathToSourceFile < ActiveRecord::Migration
   def change
-    add_column :source_files, :remote_path, :string
+  	create_table :source_files do |t|
+    	t.string :remote_path
+    	t.timestamps
+	  end
+
   end
 end
