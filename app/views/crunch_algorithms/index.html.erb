@@ -16,7 +16,10 @@
     <% @crunch_algorithms.each do |crunch_algorithm| %>
       <tr>
         <td><%= crunch_algorithm.name %></td>
-        <td><%= crunch_algorithm.functions %></td>
+        <td><% crunch_algorithm.functions.each_with_index do |f, i|%>
+            <%= i+1 %>) <%= f[:name].to_s.gsub('_',' ').titleize  %> <br>
+          <% end %>
+        </td>
         <td><%= crunch_algorithm.category %></td>
         <td><%= link_to 'Show', crunch_algorithm %></td>
         <td><%= link_to 'Edit', edit_crunch_algorithm_path(crunch_algorithm) %></td>
