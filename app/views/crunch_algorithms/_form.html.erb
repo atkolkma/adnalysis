@@ -21,14 +21,6 @@
     <%= f.text_field :category %>
   </div>
 
-  <div class="field">
-    <%= f.label :column_mappings %><br>
-    <div style="margin-left:1em">
-    <% @crunch_algorithm.column_mappings.each do |k,v| %>
-      <%= k.to_s%> => <%=v.to_s%> <br>
-    <% end %>
-  </div>
-  </div>
 
   <div class="field">
     <%= f.label :functions %><br>
@@ -44,7 +36,7 @@
               <% if @crunch_algorithm.functions[n] && @crunch_algorithm.functions[n][:name].to_s == af[:name] %>
                 selected="selected"
               <% end %> 
-            ><%=af[:name]%></option>
+            ><%=af[:name].gsub('_',' ').titleize%></option>
           <% end %>
 
 
