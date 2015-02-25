@@ -1,4 +1,5 @@
 require 'smarter_csv'
+require 'open-uri'
 
 module ReportLoader
 
@@ -19,15 +20,15 @@ module ReportLoader
     }
     @@options = {file_encoding: 'iso-8859-1', key_mapping: @@hash_key_mapping, remove_unmapped_keys: true}
 
-  def self.load_data(file_names, overwrite_options={})    
-    files = file_names
-
+  def self.load_data(urls, overwrite_options={})    
     @@options.merge(overwrite_options)
-    if files.length == 1
-      data = SmarterCSV.process(files[0], @@options)
-    elsif files.length > 1
-      data = files.map { |file| SmarterCSV.process(file, @options)}.flatten(1)
-    elsif files.length < 1
+    
+    if urls.length == 1
+      data = SmarterCSV.process(open(urls[0],'r'), @@options)
+    elsif urls.length > 1
+      # data = SmarterCSV.process(open(file,'r'), @@options)
+      data = urls.map { |file| SmarterCSV.process(open(file,'r'), @@options)}.flatten(1)
+    elsif urls.length < 1
       data = []
     end
     data

@@ -61,7 +61,6 @@ class Calculation
 	def self.unordered_ntuples(n, row)
 		words = row[:search_term].split(" ")
 		combinations = words.combination(n).to_set
-		ap combinations
 		combinations
 	end
 

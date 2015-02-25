@@ -112,7 +112,7 @@ private
       row_group[1..-1].each do |row|
         row.map do |k, v|
           sum[k] += row[k].to_i if sum[k].is_a? Integer
-          sum[k] += row[k].to_f if k == :cost
+          sum[k] = sum[k].to_f + row[k].to_f if k == :cost
           sum[k] = "n/a" if k == :cpc
         end
       end

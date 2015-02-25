@@ -37,7 +37,6 @@ class ReportsController < ApplicationController
   def create
     report_params[:source_files] = ['asdads']
 
-    ap report_params
     @report = Report.new(report_params)
 
     respond_to do |format|
