@@ -18,7 +18,6 @@ class CrunchAlgorithmsController < ApplicationController
   def new
     @allowed_functions = CrunchAlgorithm::ALLOWED_FUNCTIONS
     @crunch_algorithm = CrunchAlgorithm.new
-    @crunch_algorithm.column_mappings = []
     @crunch_algorithm.functions = []
   end
 
@@ -81,6 +80,6 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id, :column_mappings)
+      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id)
     end
 end

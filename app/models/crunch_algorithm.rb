@@ -1,9 +1,8 @@
 class CrunchAlgorithm < ActiveRecord::Base
 	has_many :reports
 	serialize :functions
-  serialize :column_mappings
 
-  after_initialize :set_default_dimensions
+  after_initialize :set_default_functions
   
   @@filter_rows_input = ""
   @@group_by_dimensions_input = ""
@@ -18,7 +17,7 @@ class CrunchAlgorithm < ActiveRecord::Base
   ]
 
 private
-  def set_default_dimensions
+  def set_default_functions
     self.functions ||= []
   end
 
