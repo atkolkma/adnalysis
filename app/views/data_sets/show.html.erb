@@ -7,8 +7,8 @@
 
 <p>
   <strong>Source files:</strong> <br>
-  <% @data_set.source_files.each do |sf| %> <br>
-    <%= sf.name %>
+  <% @data_set.source_files.each_with_index do |sf, i| %>
+    <%= i+1 %>) <%= sf.name %></br>
   <% end %>
 </p>
 
