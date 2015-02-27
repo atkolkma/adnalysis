@@ -1,9 +1,5 @@
 <p id="notice"><%= notice %></p>
-
-<p>
-  <strong>Name:</strong>
-  <%= @data_set.name %>
-</p>
+<h1><%=@data_set.name%></h1>
 
 <p>
   <strong>Source files:</strong> <br>
@@ -12,5 +8,5 @@
   <% end %>
 </p>
 
-<%= link_to 'Edit', edit_data_set_path(@data_set) %> |
-<%= link_to 'Back', data_sets_path %>
+<%= link_to 'Edit Settings', edit_data_set_path(@data_set) %> |
+<%= link_to 'Data Sets Index', data_sets_path %>

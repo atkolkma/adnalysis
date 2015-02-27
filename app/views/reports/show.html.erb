@@ -3,7 +3,7 @@
 <h4><b>Data set:</b> <%= @report.data_set.name %><br></h4>
 <h4><b>Crunch Algorithm</b>: <i><%= @report.crunch_algorithm ? @report.crunch_algorithm.name : "none"%></i></h4>
 <%= link_to 'Recrunch', crunch_path(@report) %> |
-<%= link_to 'Edit', edit_report_path(@report) %> |
+<%= link_to 'Edit Settings', edit_report_path(@report) %> |
 <%= link_to 'Reports Index', reports_path %>
 <h5>Report Preview (cached from last crunch) </h5>
 

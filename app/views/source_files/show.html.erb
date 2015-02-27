@@ -1,5 +1,5 @@
 <p id="notice"><%= notice %></p>
-
+<h1>Source File Details:</h1>
 <p>
   <strong>Name:</strong>
   <%= @source_file.name %>
@@ -15,5 +15,5 @@
     <%= @source_file.data_set.name %>
 </p>
 
-<%= link_to 'Edit', edit_source_file_path(@source_file) %> |
-<%= link_to 'Back', source_files_path %>
+<%= link_to 'Edit Settings', edit_source_file_path(@source_file) %> |
+<%= link_to 'Source Files Index', source_files_path %>

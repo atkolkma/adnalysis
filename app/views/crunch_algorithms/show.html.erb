@@ -1,9 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @crunch_algorithm.name %>
-</p>
+<h1><%= @crunch_algorithm.name %></h1>
 
 <p>
   <strong>Type:</strong>
@@ -23,5 +20,5 @@
 
 
 
-<%= link_to 'Edit', edit_crunch_algorithm_path(@crunch_algorithm) %> |
-<%= link_to 'Back', crunch_algorithms_path %>
+<%= link_to 'Edit Settings', edit_crunch_algorithm_path(@crunch_algorithm) %> |
+<%= link_to 'Crunch Algorithms Index', crunch_algorithms_path %>

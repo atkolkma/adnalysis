@@ -19,7 +19,7 @@
         <td><%= report.data_set.name%></td>
         <td><%= report.crunch_algorithm.name if report.crunch_algorithm%></td>
         <td><%= link_to 'View', report %></td>
-        <td><%= link_to 'Edit', edit_report_path(report) %></td>
+        <td><%= link_to 'Settings', edit_report_path(report) %></td>
         <td><%= link_to 'Delete', report, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
