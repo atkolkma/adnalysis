@@ -20,9 +20,9 @@
             <%= sf.name %> <br>
           <% end %>
         </td>
-        <td><%= link_to 'Show', data_set %></td>
+        <td><%= link_to 'View', data_set %></td>
         <td><%= link_to 'Edit', edit_data_set_path(data_set) %></td>
-        <td><%= link_to 'Destroy', data_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Delete', data_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
