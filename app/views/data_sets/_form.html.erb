@@ -17,19 +17,12 @@
   
   <% unless @data_set.source_files.empty? %>
     <br>
-    <%= f.label :existing_source_files %> <br>
+    <%= f.label :source_files %> <br>
     <% @data_set.source_files.each_with_index do |sf, i| %>
       <%= i+1 %>) <%= sf.name %></br>
     <%end%>
     <br>
   <%end%>
-
-  <div class="field">
-    <%= f.label :add_a_source_file %><br>
-    <%= f.file_field :remote_source_files %>
-  </div>
-  <br>
-  
 
   <div class="actions">
     <%= f.submit %>
