@@ -109,10 +109,41 @@ module ReportCruncher
           end
         end
         list_of_bigrams = list_of_bigrams.sort_by{|bigram,times| -1*times}
-        format_for_view(list_of_bigrams[0..100])
+        format_for_view(list_of_bigrams)
       end
     end
     
+  end
+
+  def self.frequency_of_unordered_n_tuples(hash_table, n)
+    with_benchmark("set unordered ntuple calculation time: ") do 
+    
+      list_of_ntuples = []
+      hash_table.each do |row|
+        list_of_ntuples << unordered_ntuples(n, row)
+      end
+
+      ntuple_count = {}
+
+      list_of_ntuples.each do |ntuple_group|
+        ntuple_group.each do |ntuple|
+          string_name = ""
+          ntuple.map do |word|
+            string_name << (word + " ")
+          end
+          ntuple_count[string_name.to_sym] = 0
+          list_of_ntuples.each do |inner_ntuple_group|
+            inner_ntuple_group.each do |inner_ntuple|
+              ntuple_count[string_name.to_sym] += 1 if ntuple == inner_ntuple 
+              inner_ntuple_group.delete(inner_ntuple) if ntuple == inner_ntuple
+            end
+          end
+        end
+      end
+
+      ntuple_count = ntuple_count.sort_by{|ntuple,times| -1*times}
+      format_for_view(ntuple_count[0..100])
+    end
   end
 
 
@@ -145,7 +176,7 @@ private
   def self.format_for_view(results_hash)
     entries = []
     results_hash.each do |k,v|
-      entries << k.to_s + ": " + "#{v.to_s} instances"
+      entries << {ngram: k.to_s, instances: v}
     end
     entries
   end
