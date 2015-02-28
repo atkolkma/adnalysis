@@ -71,8 +71,6 @@ class SourceFilesController < ApplicationController
 
     def delete_from_s3
       @source_file = SourceFile.find(params[:id])
-      ap @source_file.s3_bucket
-      ap @source_file.s3_key
       s3 = AWS::S3.new
       obj = s3.buckets[@source_file.s3_bucket].objects[@source_file.s3_key]
       obj.delete

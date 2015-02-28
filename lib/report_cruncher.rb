@@ -88,38 +88,51 @@ module ReportCruncher
     end
   end
 
-  def self.high_frequency_n_tuples(hash_table, n)
+  def self.high_frequency_n_tuples(ary, n)
     with_benchmark("ntuple calculation time: ") do 
-      if n == 1
-        list_of_words = {}
-        hash_table.each do |row|
-          phrase = row[:search_term]
-          phrase.split(" ").each do |word|
-            list_of_words[word.to_sym] ? list_of_words[word.to_sym] += row[:converted_clicks] : list_of_words[word.to_sym] = row[:converted_clicks]
-          end
+      summed_ngrams = {}
+      
+      ary.each do |row|
+        ngrams = ngrams_from_row(row, n)
+        ngrams.each do |ngram|
+          sum_ngram_values(summed_ngrams, ngram, row, [:converted_clicks, :conversions, :cost, :total_conv_value])
         end
-        list_of_words = list_of_words.sort_by{|word,times| -1*times}
-        format_for_view(list_of_words)
-      elsif n==2
-        list_of_bigrams = {}
-        hash_table.each do |row|
-          bigrams = row[:search_term].split(' ').each_cons(2).to_a.map.each{|twotuple| twotuple.join(" ")}
-          bigrams.each do |bigram|
-            list_of_bigrams[bigram.to_sym] ? list_of_bigrams[bigram.to_sym] += row[:converted_clicks] : list_of_bigrams[bigram.to_sym] = row[:converted_clicks]
-          end
-        end
-        list_of_bigrams = list_of_bigrams.sort_by{|bigram,times| -1*times}
-        format_for_view(list_of_bigrams)
       end
+
+      summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum) } 
     end
-    
   end
 
-  def self.frequency_of_unordered_n_tuples(hash_table, n)
+  def self.sum_ngram_values(totals_hash, ngram, row, dimensions)
+    if totals_hash[ngram.to_sym]
+      dimensions.each do |dim|
+        totals_hash[ngram.to_sym][dim] += normalize_numeric_field(row[dim])
+      end
+    else
+      totals_hash[ngram.to_sym] = {}
+      dimensions.each do |dim|
+        totals_hash[ngram.to_sym][dim] = normalize_numeric_field(row[dim])
+      end
+    end
+  end
+
+  def self.normalize_numeric_field(value)
+    if value.is_a?(Numeric)
+      value
+    else
+      value.to_f
+    end
+  end
+
+  def self.ngrams_from_row(row, n)
+    row[:search_term].split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
+  end
+
+  def self.frequency_of_unordered_n_tuples(ary, n)
     with_benchmark("set unordered ntuple calculation time: ") do 
     
       list_of_ntuples = []
-      hash_table.each do |row|
+      ary.each do |row|
         list_of_ntuples << unordered_ntuples(n, row)
       end
 
