@@ -7,9 +7,17 @@ module ReportCruncher
     ary
   end
 
-  def self.filter_rows(ary, num)
-    ary.keep_if do |row|
-      row[:conversions] > num
+  def self.filter_rows_by(ary, args)
+    if args[:comparison] == :greater_than
+      ary.keep_if do |row|
+        row[args[:dimension]] > args[:value]
+      end
+    elsif args[:comparison] == :less_than
+      ary.keep_if do |row|
+        row[args[:dimension]] < args[:value]
+      end
+    else
+      ary
     end
   end
 
@@ -81,21 +89,20 @@ module ReportCruncher
       summed_array
   end
 
-
   def self.remove_dimensions(ary, dimensions=[])
     ary.each do |row|
       row.delete_if {|k,v| dimensions.include? k}
     end
   end
 
-  def self.high_frequency_n_tuples(ary, n)
-    with_benchmark("ntuple calculation time: ") do 
+  def self.high_frequency_n_tuples(ary, args)
+    with_benchmark("ntuple calculation time: ") do
       summed_ngrams = {}
       
       ary.each do |row|
-        ngrams = ngrams_from_row(row, n)
+        ngrams = ngrams_from_row(row, args[:string_dimension], 2)
         ngrams.each do |ngram|
-          sum_ngram_values(summed_ngrams, ngram, row, [:converted_clicks, :conversions, :cost, :total_conv_value])
+          sum_ngram_values(summed_ngrams, ngram, row, args[:numeric_dimensions])
         end
       end
 
@@ -124,8 +131,8 @@ module ReportCruncher
     end
   end
 
-  def self.ngrams_from_row(row, n)
-    row[:search_term].split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
+  def self.ngrams_from_row(row, string_dimension, n)
+    row[string_dimension].split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
   end
 
   def self.frequency_of_unordered_n_tuples(ary, n)
@@ -180,11 +187,7 @@ private
     string_array = string_array.chomp(',')
     string_array += "]"
     string_array
-
-
   end
-
-
 
   def self.format_for_view(results_hash)
     entries = []
