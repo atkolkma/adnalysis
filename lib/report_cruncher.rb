@@ -100,7 +100,7 @@ module ReportCruncher
       summed_ngrams = {}
       
       ary.each do |row|
-        ngrams = ngrams_from_row(row, args[:string_dimension], 2)
+        ngrams = ngrams_from_row(row, args[:string_dimension], args[:n])
         ngrams.each do |ngram|
           sum_ngram_values(summed_ngrams, ngram, row, args[:numeric_dimensions])
         end
