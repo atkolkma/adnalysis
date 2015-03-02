@@ -8,7 +8,6 @@ class Report < ActiveRecord::Base
 
 	def load_data
 		@data = ReportLoader.load_data(file_names)
-		ap @data[0..20]
 	end
 
 	def data

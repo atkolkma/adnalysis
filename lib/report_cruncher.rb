@@ -133,44 +133,71 @@ module ReportCruncher
 
   def self.ngrams_from_row(row, string_dimension, n)
     row[string_dimension].split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
+  end 
+
+  def self.examples_of_substring_match(ary, substring_ary)
+    with_benchmark("examples of substring match") do
+      matches = []
+      substring_ary.each do |substring|
+        ary.each do |row|
+          if substring_match?(substring, row[:search_term])
+            matches << {matcher: substring.join(' '), matches: row[:search_term]}
+          else
+            # do nothing
+          end
+        end
+      end
+      matches
+    end
   end
 
   def self.frequency_of_unordered_n_tuples(ary, n)
     with_benchmark("set unordered ntuple calculation time: ") do 
-    
-      list_of_ntuples = []
-      ary.each do |row|
-        list_of_ntuples << unordered_ntuples(n, row)
-      end
+      numeric_dimensions = [:cost, :converted_clicks]
+      numeric_counts_default = {}
+      numeric_dimensions.each{|dim| numeric_counts_default.merge!({dim => 0})}
 
-      ntuple_count = {}
+      set_of_ntuples = full_ntuple_set_for_rows(ary,n)
+      ntuple_count = []
 
-      list_of_ntuples.each do |ntuple_group|
-        ntuple_group.each do |ntuple|
-          string_name = ""
-          ntuple.map do |word|
-            string_name << (word + " ")
-          end
-          ntuple_count[string_name.to_sym] = 0
-          list_of_ntuples.each do |inner_ntuple_group|
-            inner_ntuple_group.each do |inner_ntuple|
-              ntuple_count[string_name.to_sym] += 1 if ntuple == inner_ntuple 
-              inner_ntuple_group.delete(inner_ntuple) if ntuple == inner_ntuple
-            end
+      set_of_ntuples.each do |ntuple|
+        string_name = ""
+        ntuple.map {|word| string_name << (word + " ")}
+        ntuple_hash = {name: string_name, count: 0}.merge!(numeric_counts_default)
+
+        ary.each do |row|
+          if substring_match?(ntuple, row[:search_term])
+            ntuple_hash[:count] += 1
+            numeric_dimensions.each{ |dim| ntuple_hash[dim] += row[dim] }
+          else
+            # do nothing
           end
         end
+        ntuple_count << ntuple_hash
       end
 
-      ntuple_count = ntuple_count.sort_by{|ntuple,times| -1*times}
-      format_for_view(ntuple_count[0..100])
+      ntuple_count
     end
   end
 
+  def self.substring_match?(set_of_strings, string)
+    array_of_words = string.split(" ")
+    set_of_strings.each do |s|
+      return false unless array_of_words.include?(s)
+    end
+    true
+  end
 
-  def self.unordered_ntuples(n, row)
+  def self.full_ntuple_set_for_rows(ary, n)      
+    full_ntuple_set = Set.new
+    ary.each {|row| full_ntuple_set = full_ntuple_set.merge(unordered_ntuples_in_row(n, row))}
+    full_ntuple_set
+  end
+
+  def self.unordered_ntuples_in_row(n, row)
     words = row[:search_term].split(" ")
-    combinations = words.combination(n).to_set
-    combinations
+    combination_array = words.combination(n)
+    combination_array.map{|combination| combination.to_set}.to_set # a set of all sets of (unordered) ntuples from row.
   end
 
 private
