@@ -15,9 +15,12 @@ module ReportLoader
       keyword: :keyword,
       converted_clicks: :converted_clicks,
       conversions: :conversions,
-      "total_conv._value".to_sym => :total_conv_value
+      "total_conv._value".to_sym => :total_conv_value,
+      matched_search_query: :matched_search_query,
+      revenue: :revenue,
+      quantity: :quantity
     }
-    
+
     @@options = {file_encoding: 'iso-8859-1', key_mapping: @@hash_key_mapping, remove_unmapped_keys: true}
 
   def self.load_data(urls, overwrite_options={})    

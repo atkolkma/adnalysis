@@ -151,13 +151,12 @@ module ReportCruncher
     end
   end
 
-  def self.frequency_of_unordered_n_tuples(ary, n)
+  def self.frequency_of_unordered_n_tuples(ary, args)
     with_benchmark("set unordered ntuple calculation time: ") do 
-      numeric_dimensions = [:cost, :converted_clicks]
       numeric_counts_default = {}
-      numeric_dimensions.each{|dim| numeric_counts_default.merge!({dim => 0})}
+      args[:numeric_dimensions].each{|dim| numeric_counts_default.merge!({dim => 0})}
 
-      set_of_ntuples = full_ntuple_set_for_rows(ary,n)
+      set_of_ntuples = full_ntuple_set_for_rows(ary,args[:n], args[:string_dimension])
       ntuple_count = []
 
       set_of_ntuples.each do |ntuple|
@@ -166,9 +165,9 @@ module ReportCruncher
         ntuple_hash = {name: string_name, count: 0}.merge!(numeric_counts_default)
 
         ary.each do |row|
-          if substring_match?(ntuple, row[:search_term])
+          if substring_match?(ntuple, row[:matched_search_query])
             ntuple_hash[:count] += 1
-            numeric_dimensions.each{ |dim| ntuple_hash[dim] += row[dim] }
+            args[:numeric_dimensions].each{ |dim| ntuple_hash[dim] += row[dim] }
           else
             # do nothing
           end
@@ -188,14 +187,14 @@ module ReportCruncher
     true
   end
 
-  def self.full_ntuple_set_for_rows(ary, n)      
+  def self.full_ntuple_set_for_rows(ary, n, string_dimension)      
     full_ntuple_set = Set.new
-    ary.each {|row| full_ntuple_set = full_ntuple_set.merge(unordered_ntuples_in_row(n, row))}
+    ary.each {|row| full_ntuple_set = full_ntuple_set.merge(unordered_ntuples_in_string(n, row[string_dimension]))}
     full_ntuple_set
   end
 
-  def self.unordered_ntuples_in_row(n, row)
-    words = row[:search_term].split(" ")
+  def self.unordered_ntuples_in_string(n, string)
+    words = string.split(" ")
     combination_array = words.combination(n)
     combination_array.map{|combination| combination.to_set}.to_set # a set of all sets of (unordered) ntuples from row.
   end
