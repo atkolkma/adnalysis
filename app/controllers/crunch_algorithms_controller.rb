@@ -23,7 +23,7 @@ class CrunchAlgorithmsController < ApplicationController
 
   # GET /crunch_algorithms/1/edit
   def edit
-    @allowed_functions = CrunchAlgorithm::ALLOWED_FUNCTIONS
+    @allowed_functions = CrunchAlgorithm::ALGORITHM_DEFAULTS
   end
 
   # POST /crunch_algorithms

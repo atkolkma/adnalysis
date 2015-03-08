@@ -32,11 +32,11 @@
 
           <% @allowed_functions.each do |af| %>
             
-            <option value="<%=af[:name]%>" 
-              <% if @crunch_algorithm.functions[n] && @crunch_algorithm.functions[n][:name].to_s == af[:name] %>
+            <option value="<%=af[:ui_name]%>" 
+              <% if @crunch_algorithm.functions[n] && @crunch_algorithm.functions[n][:name].to_s == af[:method_name] %>
                 selected="selected"
               <% end %> 
-            ><%=af[:name].gsub('_',' ').titleize%></option>
+            ><%=af[:ui_name]%></option>
           <% end %>
 
 
@@ -48,7 +48,9 @@
         />
         <br>
       </div>
-
+        <% if @crunch_algorithm.functions[n] %>
+          <%= @allowed_functions.select{|af| @crunch_algorithm.functions[n][:name].to_s == af[:method_name]}.first[:arguments] %>
+        <% end %>
       <% end %>
   </div>
 
