@@ -48,9 +48,18 @@
         />
         <br>
       </div>
+        
         <% if @crunch_algorithm.functions[n] %>
-          <%= @allowed_functions.select{|af| @crunch_algorithm.functions[n][:name].to_s == af[:method_name]}.first[:arguments] %>
+          <% func =  @allowed_functions.select{|af| @crunch_algorithm.functions[n][:name].to_s == af[:method_name]}.first %>
+          <% func_args = func[:arguments] %>
+          
+          <% func_args.each do |arg_name, values| %>
+              <%= f.label arg_name %>
+              <input size="90" id="functions_<%=n%>_args" name="functions[<%=n%>][args]" type="text" value="" > <br>
+          <% end %>
+
         <% end %>
+
       <% end %>
   </div>
 
