@@ -18,7 +18,12 @@ module ReportLoader
       "total_conv._value".to_sym => :total_conv_value,
       matched_search_query: :matched_search_query,
       revenue: :revenue,
-      quantity: :quantity
+      quantity: :quantity,
+      query: :query,
+      "Impressions".to_sym => :impressions,
+      "CTR".to_sym => :ctr,
+      "Avg._position".to_sym => :avg_position,
+      "Avgposition".to_sym => :avg_position
     }
 
     @@options = {file_encoding: 'iso-8859-1', key_mapping: @@hash_key_mapping, remove_unmapped_keys: true}
@@ -28,6 +33,7 @@ module ReportLoader
     
     if urls.length == 1
       data = SmarterCSV.process(open(urls[0],'r'), @@options)
+      ap "data loaded"
     elsif urls.length > 1
       # data = SmarterCSV.process(open(file,'r'), @@options)
       data = urls.map { |file| SmarterCSV.process(open(file,'r'), @@options)}.flatten(1)

@@ -21,6 +21,43 @@ module ReportCruncher
     end
   end
 
+  def self.output_part_numbers(ary, args)
+    ary = only_part_number_rows(ary, args[:string_dimension])
+    ary.map{ |row| row.merge( {args[:string_dimension].to_sym => strip_part_number(row[args[:string_dimension].to_sym]) } ) }
+  end
+
+  def self.strip_part_number(string)
+    string.to_s.split(' ').keep_if{|word| is_part_number?(word)}.first
+  end
+
+  def self.part_number_queries(ary, args)
+    only_part_number_rows(ary, args[:string_dimension])
+  end
+
+  def self.only_part_number_rows(ary, string_dimension)
+    ary.keep_if{|row| is_part_number?(row[string_dimension.to_sym])}
+  end
+
+  def self.extract_part_number(string)
+    string.to_s.split(' ').keep_if{|word| is_part_number?(word)}
+  end
+
+  def self.is_part_number?(string)
+    proposed_number = string.to_i
+    if proposed_number > 0
+      digits = num_digits(proposed_number)
+      if digits > 7 && digits < 10
+        return true
+      end
+    end
+    false
+  end
+
+  def self.num_digits(number)
+    Math.log10(number).to_i + 1
+  end
+
+  ### must pass hash within array
   def self.sort_by_dim(ary, arguments)
     ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
   end
@@ -49,15 +86,13 @@ module ReportCruncher
     ary[0].keys.map{|key| key.to_s.gsub("_", " ").titleize}
   end
 
-  ##### Unfinished ####
-
   def self.group_by_dimension(ary, dimension)
     with_benchmark("group by dimension: ") do 
       dimensions_to_remove = []
       ary[0].each do |key, value|
         dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
       end 
-      ary.remove_dimensions(dimensions_to_remove)
+      ary = remove_dimensions(ary, dimensions_to_remove)
 
       all_values = ary.map{|row| row[dimension.to_sym]}.uniq
       row_groups = group_rows(ary, dimension, all_values)
@@ -106,7 +141,7 @@ module ReportCruncher
         end
       end
 
-      summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum) } 
+      summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum).merge({roi: (sum[:cost] == 0 ? 0 : (sum[:total_conv_value] / sum[:cost])) }) } 
     end
   end
 
@@ -131,8 +166,12 @@ module ReportCruncher
     end
   end
 
+  def self.filter_by_word_number(ary, args)
+    ary.keep_if{|row| args[:n] <= row[args[:string_dimension]].to_s.split(' ').length}
+  end
+
   def self.ngrams_from_row(row, string_dimension, n)
-    row[string_dimension].split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
+    row[string_dimension].to_s.split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
   end 
 
   def self.examples_of_substring_match(ary, substring_ary)
