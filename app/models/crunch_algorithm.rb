@@ -5,7 +5,6 @@ class CrunchAlgorithm < ActiveRecord::Base
   after_initialize :set_default_functions
   
   @@group_by_dimensions_input = ""
-  @@group_by_dimension_input = ""
   @@sort_by_dim_input = ""
   @@high_frequency_n_tuples_input = ""
   @@frequency_of_unordered_n_tuples_input = ""
@@ -17,7 +16,6 @@ class CrunchAlgorithm < ActiveRecord::Base
 
   ALLOWED_FUNCTIONS = [
     {name: "group_by_dimensions", form_input: @@group_by_dimensions_input},
-    {name: "group_by_dimension", form_input: @@group_by_dimension_input},
     {name: "sort_by_dim", form_input: @@sort_by_dim_input},
     {name: "truncate", form_input: @@truncate_input},
     {name: "high_frequency_n_tuples", form_input: @@high_frequency_n_tuples_input},

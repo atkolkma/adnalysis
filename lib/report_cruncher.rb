@@ -98,12 +98,23 @@ module ReportCruncher
       row_groups = group_rows(ary, dimension, all_values)
       summed_array = []
       row_groups.each {|row_group| summed_array << sum_rows(row_group)}
+      ap summed_array
       summed_array
     end
   end
 
   def self.group_by_dimensions(ary, dimensions)  #for only two dimensions number_of_rows
-      dimensions_to_remove = []
+    if dimensions.length == 2
+      group_by_two_dimensions(ary, dimensions)
+    elsif dimensions.length == 1
+      group_by_dimension(ary, dimensions[0])
+    else
+      raise "Invalid arguments, must include one or two dimensions in array form"
+    end
+  end
+
+  def self.group_by_two_dimensions(ary, dimensions)
+     dimensions_to_remove = []
       ary[0].each do |key, value|
         dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.include?(key.to_s)
       end
@@ -219,7 +230,7 @@ module ReportCruncher
   end
 
   def self.substring_match?(set_of_strings, string)
-    array_of_words = string.split(" ")
+    array_of_words = string.to_s.split(" ")
     set_of_strings.each do |s|
       return false unless array_of_words.include?(s)
     end
@@ -263,7 +274,7 @@ private
   end
 
   def self.sum_rows(row_group)
-    if row_group && row_group.length > 1
+    if row_group && row_group.length > 0  
       sum = row_group[0]
       row_group[1..-1].each do |row|
         row.map do |k, v|
