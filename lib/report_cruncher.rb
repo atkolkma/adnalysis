@@ -215,7 +215,7 @@ module ReportCruncher
         ntuple_hash = {name: string_name, count: 0}.merge!(numeric_counts_default)
 
         ary.each do |row|
-          if substring_match?(ntuple, row[:matched_search_query])
+          if substring_match?(ntuple, row[args[:string_dimension].to_sym])
             ntuple_hash[:count] += 1
             args[:numeric_dimensions].each{ |dim| ntuple_hash[dim] += row[dim] }
           else
