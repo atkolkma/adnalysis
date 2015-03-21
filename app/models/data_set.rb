@@ -6,4 +6,6 @@ class DataSet < ActiveRecord::Base
 	def sanitize_source_files
 		self.source_files.delete_if {|file_name| file_name == '0'}
 	end
+
+	
 end
