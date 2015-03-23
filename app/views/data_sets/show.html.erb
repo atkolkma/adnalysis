@@ -2,9 +2,16 @@
 <h1><%=@data_set.name%></h1>
 
 <p>
-  <strong>Source files:</strong> <br>
-  <% @data_set.source_files.each_with_index do |sf, i| %>
-    <%= i+1 %>) <%= sf.name %></br>
+  <h4>Source files:</h4>
+  <% @data_set.file_names.each_with_index do |fn, i| %>
+    <%= i+1 %>) <%= fn %></br>
+  <% end %>
+</p>
+
+<p>
+  <h4>Dimensions:</h4>
+  <% @data_set.dimensions.each do |dim| %>
+    	<b><%=dim[:name]%></b> (<%=dim[:data_type]%>) </br>
   <% end %>
 </p>
 

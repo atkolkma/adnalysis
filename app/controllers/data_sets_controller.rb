@@ -1,3 +1,5 @@
+require 'data_importer'
+
 class DataSetsController < ApplicationController
   before_action :set_data_set, only: [:show, :edit, :update, :destroy]
 
@@ -26,21 +28,17 @@ class DataSetsController < ApplicationController
   # POST /data_sets.json
   def create
     uploaded_file = data_set_params[:file]
-    File.open(Rails.root.join('public', 'uploads', uploaded_file.original_filename), 'wb') {|file| file.write(uploaded_file.read)}
-    uploaded_file_location = Rails.root.join('public', 'uploads', uploaded_file.original_filename)
     @data_set = DataSet.new(data_set_params.except(:file).merge(file_names: [uploaded_file.original_filename]))
-    @data_set.store_data(uploaded_file_location)
 
     respond_to do |format|
-      config.logger.level = :info
-      if @data_set.save
-      config.logger.level = :debug
+      if @data_set.save && DataImporter.store_data_from_csv(@data_set, uploaded_file) #must happen after dataset is persisted
         format.html { redirect_to @data_set, notice: 'Data set was successfully created.' }
         format.json { render :show, status: :created, location: @data_set }
       else
         format.html { render :new }
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
       end
+
     end
   end
 

@@ -5,7 +5,8 @@ class DataSet < ActiveRecord::Base
 	serialize :dimensions
   serialize :data
   serialize :file_names
-	# before_save :sanitize_source_files
+	
+  # before_create :generate_dimensions
 
    @@hash_key_mapping = {
       match_type: :match_type,
@@ -47,5 +48,9 @@ class DataSet < ActiveRecord::Base
     self.stored_data = formatted
     self.save
     ap "data loaded"
+  end
+
+  def generate_dimensions
+    self.dimensions = self.data_source.dimension_translations.map {|dt| {name: dt[:translated_name], data_type: dt[:data_type]}}
   end
 end
