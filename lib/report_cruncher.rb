@@ -144,20 +144,19 @@ module ReportCruncher
   def self.high_frequency_n_tuples(ary, args)
     with_benchmark("ntuple calculation time: ") do
       summed_ngrams = {}
-      
       ary.each do |row|
         ngrams = ngrams_from_row(row, args[:string_dimension], args[:n])
         ngrams.each do |ngram|
           sum_ngram_values(summed_ngrams, ngram, row, args[:numeric_dimensions])
         end
       end
-
-      summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum).merge({roi: (sum[:cost] == 0 ? 0 : (sum[:total_conv_value] / sum[:cost])) }) } 
+      summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum) } 
+      # summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum).merge({roi: (sum["cost"] == 0 ? 0 : (sum["total_conv_value"] / sum["cost"])) }) } 
     end
   end
 
   def self.sum_ngram_values(totals_hash, ngram, row, dimensions)
-    if totals_hash[ngram.to_sym]
+    if totals_hash[ngram]
       dimensions.each do |dim|
         totals_hash[ngram.to_sym][dim] += normalize_numeric_field(row[dim])
       end

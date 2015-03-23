@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :data_sources
+
   resources :source_files
 
   resources :crunch_algorithms

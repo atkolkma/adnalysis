@@ -16,8 +16,10 @@
       <tr>
         <td><%= data_set.name %></td>
         <td>
-          <% data_set.source_files.each do |sf| %>
-            <%= sf.name %> <br>
+          <% if data_set.file_names %>
+          <% data_set.file_names.each do |fn| %>
+            <%= fn %> <br>
+          <% end %>
           <% end %>
         </td>
         <td><%= link_to 'View', data_set %></td>

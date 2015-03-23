@@ -14,7 +14,7 @@ class DataSetsController < ApplicationController
 
   # GET /data_sets/new
   def new
-    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/new/${filename}", success_action_status: 201, acl: :public_read)
+    # @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/new/${filename}", success_action_status: 201, acl: :public_read)
     @data_set = DataSet.new
   end
 
@@ -25,7 +25,13 @@ class DataSetsController < ApplicationController
   # POST /data_sets
   # POST /data_sets.json
   def create
-    @data_set = DataSet.new(data_set_params)
+    uploaded_file = data_set_params[:file]
+    File.open(Rails.root.join('public', 'uploads', uploaded_file.original_filename), 'wb') {|file| file.write(uploaded_file.read)}
+    uploaded_file_location = Rails.root.join('public', 'uploads', uploaded_file.original_filename)
+    @data_set = DataSet.new(data_set_params.except(:file).merge(file_names: [uploaded_file.original_filename]))
+    @data_set.store_data(uploaded_file_location)
+
+    # upload(@data_set, uploaded_file)
 
     respond_to do |format|
       if @data_set.save
@@ -36,6 +42,13 @@ class DataSetsController < ApplicationController
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def upload(data_set, file)
+    uploaded_io = file
+    opened_file = Rails.root.join('public', 'uploads', uploaded_io.original_filename)
+    data_set.store_data(opened_file)
+    redirect_to @data_set
   end
 
   # PATCH/PUT /data_sets/1
@@ -63,6 +76,7 @@ class DataSetsController < ApplicationController
   end
 
   private
+    
     # Use callbacks to share common setup or constraints between actions.
     def set_data_set
       @data_set = DataSet.find(params[:id])
@@ -70,6 +84,6 @@ class DataSetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_set_params
-      params.require(:data_set).permit(:name, source_files: [])
+      params.require(:data_set).permit(:name, :file, file_names:[], source_files: [])
     end
 end

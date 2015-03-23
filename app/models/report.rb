@@ -7,7 +7,7 @@ class Report < ActiveRecord::Base
 	serialize :report_preview_rows
 
 	def load_data
-		@data = ReportLoader.load_data(file_names)
+		@data = self.data_set.data
 	end
 
 	def data

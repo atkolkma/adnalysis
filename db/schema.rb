@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150226172637) do
+ActiveRecord::Schema.define(version: 20150323003325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,8 +28,17 @@ ActiveRecord::Schema.define(version: 20150226172637) do
   create_table "data_sets", force: :cascade do |t|
     t.string   "name"
     t.string   "source_files"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.json     "stored_data",  default: {}
+    t.integer  "data_source"
+    t.string   "dimensions"
+    t.string   "file_names"
+  end
+
+  create_table "data_sources", force: :cascade do |t|
+    t.string "name"
+    t.string "dimension_translations"
   end
 
   create_table "reports", force: :cascade do |t|
@@ -44,8 +53,9 @@ ActiveRecord::Schema.define(version: 20150226172637) do
   create_table "source_files", force: :cascade do |t|
     t.string   "remote_path"
     t.integer  "data_set_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.json     "data",        default: {}
   end
 
 end
