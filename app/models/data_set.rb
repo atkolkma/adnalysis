@@ -1,7 +1,7 @@
 class DataSet < ActiveRecord::Base
 	has_many :source_files
 	has_many :reports, foreign_key: 'data_set_id'
-	has_one :data_source
+	belongs_to :data_source
 	serialize :dimensions
   serialize :data
   serialize :file_names

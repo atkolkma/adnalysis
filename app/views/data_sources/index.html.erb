@@ -18,7 +18,11 @@
           <%= data_source.name %>
         </td>
         <td>
-          <%= data_source.dimension_translations %>
+          <% data_source.dimension_translations.each do |dt| %>
+            <b><%= dt[:original_name] %></b>  => 
+            <b><%= dt[:translated_name] %></b>
+            (<%= dt[:data_type] %>) <br>
+          <% end %>
         </td>
         <td><%= link_to 'Show', data_source %></td>
         <td><%= link_to 'Edit', edit_data_source_path(data_source) %></td>

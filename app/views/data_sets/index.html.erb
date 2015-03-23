@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th>Name</th>
+      <th>Data Source</th>
       <th>Source files</th>
       <th colspan="3"></th>
     </tr>
@@ -15,6 +16,7 @@
     <% @data_sets.each do |data_set| %>
       <tr>
         <td><%= data_set.name %></td>
+        <td><%= data_set.data_source.name if data_set.data_source%></td>
         <td>
           <% if data_set.file_names %>
           <% data_set.file_names.each do |fn| %>

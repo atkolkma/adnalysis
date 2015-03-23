@@ -16,17 +16,17 @@
 
   <div class="field">
     <%= f.label :dimension_translations %><br>
-      <% (0..6).each do |n| %>
+      <% (0..12).each do |n| %>
       <div style="margin-left:1em; padding-bottom: 20px">
         <%=n%>)
 
-        <%= f.label :original_name %><input style="width:50px" size="90" id="dimension_translations_<%=n%>_original_name" name="dimension_translations[<%=n%>][original_name]" type="text" 
+        <%= f.label :original_name %><input style="width:100px" size="90" id="dimension_translations_<%=n%>_original_name" name="dimension_translations[<%=n%>][original_name]" type="text" 
         <% if @data_source.dimension_translations[n] %>
           value="<%=@data_source.dimension_translations[n][:original_name]%>"
         <% end %>
         />        
         
-        <%= f.label :translated_name %><input style="width:50px" size="90" id="dimension_translations_<%=n%>_translated_name" name="dimension_translations[<%=n%>][translated_name]" type="text" 
+        <%= f.label :translated_name %><input style="width:100px" size="90" id="dimension_translations_<%=n%>_translated_name" name="dimension_translations[<%=n%>][translated_name]" type="text" 
         <% if @data_source.dimension_translations[n] %>
           value="<%=@data_source.dimension_translations[n][:translated_name]%>"
         <% end %>

@@ -1,4 +1,13 @@
 <p id="notice"><%= notice %></p>
 
+<h1><%= @data_source.name %></h1>	
+
+<h3>Dimension Translations:</h3>
+<% @data_source.dimension_translations.each do |dt| %>
+	<b><%= dt[:original_name] %></b>  => 
+	<b><%= dt[:translated_name] %></b>
+	(<%= dt[:data_type] %>) <br>
+<% end %>
+
 <%= link_to 'Edit', edit_data_source_path(@data_source) %> |
 <%= link_to 'Back', data_sources_path %>

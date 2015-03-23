@@ -31,10 +31,10 @@ class DataSetsController < ApplicationController
     @data_set = DataSet.new(data_set_params.except(:file).merge(file_names: [uploaded_file.original_filename]))
     @data_set.store_data(uploaded_file_location)
 
-    # upload(@data_set, uploaded_file)
-
     respond_to do |format|
+      config.logger.level = :info
       if @data_set.save
+      config.logger.level = :debug
         format.html { redirect_to @data_set, notice: 'Data set was successfully created.' }
         format.json { render :show, status: :created, location: @data_set }
       else
@@ -42,13 +42,6 @@ class DataSetsController < ApplicationController
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
       end
     end
-  end
-
-  def upload(data_set, file)
-    uploaded_io = file
-    opened_file = Rails.root.join('public', 'uploads', uploaded_io.original_filename)
-    data_set.store_data(opened_file)
-    redirect_to @data_set
   end
 
   # PATCH/PUT /data_sets/1
@@ -84,6 +77,6 @@ class DataSetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_set_params
-      params.require(:data_set).permit(:name, :file, file_names:[], source_files: [])
+      params.require(:data_set).permit(:name, :file, :data_source_id, file_names:[], source_files: [])
     end
 end

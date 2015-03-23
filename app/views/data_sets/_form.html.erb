@@ -12,10 +12,13 @@
   <% end %>
 
   <%= f.label :name %><br>
-  <%= f.text_field :name %><br>
+  <%= f.text_field :name %><br><br>
+  
+  <%= f.label :data_source %><br>
+  <%= select("data_set", "data_source_id", DataSource.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false }) %> <br><br>
 
   <%= f.label :data_file %><br>
-  <%= f.file_field :file %>
+  <%= f.file_field :file %> <br><br>  
 
 
   <div class="actions">
