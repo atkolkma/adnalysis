@@ -14,11 +14,27 @@
   <%= f.label :name %><br>
   <%= f.text_field :name %><br><br>
   
-  <%= f.label :data_source %><br>
-  <%= select("data_set", "data_source_id", DataSource.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false }) %> <br><br>
+  <% if !@data_set.stored_data.blank? %>
+    <p>
+      <h4>Source files:</h4>
+      <% @data_set.file_names.each_with_index do |fn, i| %>
+        <%= i+1 %>) <%= fn %></br>
+      <% end %>
+    </p>
 
-  <%= f.label :data_file %><br>
-  <%= f.file_field :file %> <br><br>  
+    <p>
+      <h4>Dimensions:</h4>
+      <% @data_set.dimensions.each do |dim| %>
+          <b><%=dim[:name]%></b> (<%=dim[:data_type]%>) </br>
+      <% end %>
+    </p>
+  <% else %>
+    <%= f.label :data_source %><br>
+    <%= select("data_set", "data_source_id", DataSource.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false }) %> <br><br>
+
+    <%= f.label :data_file %><br>
+    <%= f.file_field :file %> <br><br> 
+  <% end %> 
 
 
   <div class="actions">
