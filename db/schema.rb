@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150323121738) do
+ActiveRecord::Schema.define(version: 20150324023531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,21 @@ ActiveRecord::Schema.define(version: 20150323121738) do
     t.string "dimension_translations"
   end
 
+  create_table "filters", force: :cascade do |t|
+    t.integer "algorithm_id"
+    t.integer "priority"
+    t.string  "string"
+    t.string  "comparison"
+    t.string  "value"
+  end
+
+  create_table "groupings", force: :cascade do |t|
+    t.integer "algorithm_id"
+    t.integer "priority"
+    t.string  "dimension1"
+    t.string  "dimension2"
+  end
+
   create_table "reports", force: :cascade do |t|
     t.string   "name"
     t.integer  "data_set_id"
@@ -50,12 +65,27 @@ ActiveRecord::Schema.define(version: 20150323121738) do
     t.datetime "updated_at",          null: false
   end
 
+  create_table "sortings", force: :cascade do |t|
+    t.integer "algorithm_id"
+    t.integer "priority"
+    t.string  "field1"
+    t.string  "order1"
+    t.string  "field2"
+    t.string  "order2"
+  end
+
   create_table "source_files", force: :cascade do |t|
     t.string   "remote_path"
     t.integer  "data_set_id"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.json     "data",        default: {}
+  end
+
+  create_table "truncates", force: :cascade do |t|
+    t.integer "algorithm_id"
+    t.integer "priority"
+    t.integer "cutoff"
   end
 
 end
