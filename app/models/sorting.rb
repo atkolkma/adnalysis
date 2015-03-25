@@ -4,6 +4,10 @@ class Sorting < ActiveRecord::Base
 		"Sort by field"
 	end
 
+	def self.form
+		"<h4>sort</h4>"
+	end
+
 	def execute(ary)
 	    ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
 	end
@@ -22,8 +26,6 @@ class Sorting < ActiveRecord::Base
 	      end
 	    end
 	    higher_array <=> lower_array
-	  end
 	end
-
 
 end

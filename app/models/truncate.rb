@@ -8,4 +8,8 @@ class Truncate < ActiveRecord::Base
 	  ary[0..number_of_rows]
 	end
 
+	def self.form
+		"<h4>truncate</h4>"
+	end
+
 end

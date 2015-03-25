@@ -32,7 +32,7 @@ class CrunchAlgorithmsController < ApplicationController
     @crunch_algorithm = CrunchAlgorithm.new(crunch_algorithm_params)
 
     respond_to do |format|
-      if @crunch_algorithm.save
+      if @crunch_algorithm.save && @crunch_algorithm.set_dimensions
         format.html { redirect_to @crunch_algorithm, notice: 'Crunch algorithm was successfully created.' }
         format.json { render :show, status: :created, location: @crunch_algorithm }
       else
@@ -40,6 +40,11 @@ class CrunchAlgorithmsController < ApplicationController
         format.json { render json: @crunch_algorithm.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def set_dimensions
+    self.dimensions = self.data_source.dimension_translations.map {|dt| {name: dt[:translated_name], data_type: dt[:data_type]}}
+    self.save
   end
 
   # PATCH/PUT /crunch_algorithms/1

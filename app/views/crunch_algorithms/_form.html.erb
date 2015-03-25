@@ -17,42 +17,23 @@
   </div>
 
   <div class="field">
-    <%= f.label :category %><br>
-    <%= f.text_field :category %>
+    <%= f.label :data_source %><br>
+    <%= select("data_set", "data_source_id", DataSource.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false }) %>
   </div>
 
-
-  <div class="field">
+  <div id="functions" class="field">
     <%= f.label :functions %><br>
-      <% (0..6).each do |n| %>
-      <div style="margin-left:1em; padding-bottom: 20px">
-        <%=n%>) <select name="functions[<%=n%>][name]">
-          <% unless @crunch_algorithm.functions[n] %> '<option value="" selected="selected">Please select</option>' <% end %> 
-          
-
-          <% @allowed_functions.each do |af| %>
-            
-            <option value="<%=af[:name]%>" 
-              <% if @crunch_algorithm.functions[n] && @crunch_algorithm.functions[n][:name].to_s == af[:name] %>
-                selected="selected"
-              <% end %> 
-            ><%=af[:name].gsub('_',' ').titleize%></option>
-          <% end %>
-
-
-        </select> 
-        <input size="90" id="functions_<%=n%>_args" name="functions[<%=n%>][args]" type="text" 
-        <% if @crunch_algorithm.functions[n] %>
-          value="<%=@crunch_algorithm.functions[n][:args]%>"
-        <% end %>
-        />
-        <br>
-      </div>
-
+      <select id="function-selector" name="functions[name]">
+        <option value="select">select</option>
+      <% @allowed_functions.each do |af| %>
+        <option value="<%=af%>"><%=af%></option>
       <% end %>
+    </select><br>
   </div>
 
   <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
+
+

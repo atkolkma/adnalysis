@@ -1,0 +1,12 @@
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://coffeescript.org/
+jQuery ->
+	$('#function-selector').on "change", ->
+	  value = $(this).val()
+	  if value == 'truncate'
+	      $('#functions').append('<%= Truncate.form %>' )
+	  if value == 'sort'
+	      $('#functions').append('<%= Sorting.form %>' )
+      $('#functions').append($('#function-selector'))
+      $('#function-selector').val('select') 
