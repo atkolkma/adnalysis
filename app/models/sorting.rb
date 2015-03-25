@@ -27,7 +27,7 @@ class Sorting < ActiveRecord::Base
 			<select>direction2
 				<option>descending</option>
 				<option>ascending</option>
-			</select> <br /><br />"
+			</select> <br /><br />asdasdadsad"
 	end
 
 	def execute(ary)

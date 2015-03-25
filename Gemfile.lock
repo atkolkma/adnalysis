@@ -155,8 +155,6 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
-    turbolinks (2.5.3)
-      coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     web-console (2.0.0)
@@ -172,6 +170,7 @@ DEPENDENCIES
   awesome_print
   aws-sdk-v1
   byebug
+  coffee-rails
   dotenv-rails!
   jbuilder (~> 2.0)
   jquery-rails
@@ -182,5 +181,4 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   smarter_csv
-  turbolinks
   web-console (~> 2.0)

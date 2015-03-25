@@ -9,7 +9,8 @@ class Truncate < ActiveRecord::Base
 	end
 
 	def self.form
-		"<h4>truncate</h4>"
+		"<strong>Truncate:</strong>
+			<input type='number' /> <br /><br />"
 	end
 
 end

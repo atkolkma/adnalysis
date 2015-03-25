@@ -1,12 +1,40 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
+console.log("sdfs")
 jQuery ->
+	truncate_form = "<strong>Truncate:</strong><input type='number' /> <br /><br />"
+	sorting_form = "
+			<strong>Sort:</strong>
+			<span>dimension1 </span>
+			<select>dimension1
+				<option>select</option>
+				<option>clicks</option>
+				<option>imps</option>
+			</select>
+			<span>direction </span>
+			<select>direction1
+				<option>descending</option>
+				<option>ascending</option>
+			</select>
+			<span>dimension2 </span>
+			<select>dimension2
+				<option>select</option>
+				<option>clicks</option>
+				<option>imps</option>
+			</select>
+			<span>direction </span>
+			<select>direction2
+				<option>descending</option>
+				<option>ascending</option>
+			</select> <br /><br />"
+
+
 	$('#function-selector').on "change", ->
 	  value = $(this).val()
 	  if value == 'truncate'
-	      $('#functions').append('<%= Truncate.form %>' )
+	      $('#functions').append(truncate_form)
 	  if value == 'sort'
-	      $('#functions').append('<%= Sorting.form %>' )
+	      $('#functions').append(sorting_form)
       $('#functions').append($('#function-selector'))
       $('#function-selector').val('select') 
