@@ -10,7 +10,9 @@ class CrunchAlgorithm < ActiveRecord::Base
 
   ALLOWED_FUNCTIONS = [
     "truncate",
-    "sort"
+    "sort",
+    "filter",
+    "group"
   ]
 
 private
