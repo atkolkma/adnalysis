@@ -1,10 +1,9 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
-console.log("sdfs")
 jQuery ->
-	truncate_form = "<strong>Truncate: </strong> number of rows <input style='width:75px' type='number' /> <br /><br />"
-	filter_form = "<strong>Filter:</strong>
+	truncate_form = (number) ->  number+") <strong>Truncate: </strong> number of rows <input style='width:75px' type='number' /> <br /><br />"
+	filter_form = (number) -> number+") <strong>Filter:</strong>
 			<select>dimension1
 				<option>select</option>
 				<option>clicks</option>
@@ -29,7 +28,7 @@ jQuery ->
 			<span>Value</span>
 			<input style='width:75px' type='text'></input>
 			</select> <br /><br />"
-	group_form = "<strong>Group:</strong>
+	group_form = (number) -> number+") <strong>Group:</strong>
 			<select>dimension1
 				<option>select</option>
 				<option>clicks</option>
@@ -41,8 +40,7 @@ jQuery ->
 				<option>clicks</option>
 				<option>imps</option>
 			</select><br /><br />"
-	sorting_form = "
-			<strong>Sort:</strong>
+	sorting_form = (number) -> number+") <strong>Sort:</strong>
 			<select>dimension1
 				<option>select</option>
 				<option>clicks</option>
@@ -62,15 +60,19 @@ jQuery ->
 				<option>descending</option>
 				<option>ascending</option>
 			</select> <br /><br />"
+	num_functions = 0
+	crunchAlgorithmId = $('#functions').data('crunch-alg-id')
 	$('#function-selector').on "change", ->
 	  value = $(this).val()
+	  if value != 'select'
+	      num_functions += 1
 	  if value == 'truncate'
-	      $('#functions').append(truncate_form)
+	      $('#functions').append(truncate_form(num_functions))
 	  if value == 'sort'
-	      $('#functions').append(sorting_form)	  
+	      $('#functions').append(sorting_form(num_functions))	  
 	  if value == 'filter'
-	      $('#functions').append(filter_form)	  
+	      $('#functions').append(filter_form(num_functions))	  
 	  if value == 'group'
-	      $('#functions').append(group_form)
+	      $('#functions').append(group_form(num_functions))
       $('#functions').append($('#function-selector'))
       $('#function-selector').val('select') 
