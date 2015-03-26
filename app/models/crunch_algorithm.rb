@@ -15,6 +15,11 @@ class CrunchAlgorithm < ActiveRecord::Base
     "group"
   ]
 
+  def set_dimensions
+    self.dimensions = self.data_source.dimension_translations.map {|dt| {name: dt[:translated_name], data_type: dt[:data_type]}}
+    self.save
+  end
+
 private
   def set_default_functions
     self.functions ||= []

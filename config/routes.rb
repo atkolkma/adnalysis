@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   root 'reports#index'
 
   get 'reports/:id/crunch', to: 'reports#crunch', as: 'crunch' 
+  get 'crunch_algorithms/:id/edit_functions', to: 'crunch_algorithms#edit_functions', as: 'edit_functions' 
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

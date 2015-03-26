@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+<%= form_for(@crunch_algorithm) do |f| %>
+  <% if @crunch_algorithm.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@crunch_algorithm.errors.count, "error") %> prohibited this crunch_algorithm from being saved:</h2>
+
+      <ul>
+      <% @crunch_algorithm.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h1>Edit Functions for <%=@crunch_algorithm.name%></h1>
+  <h4>Data Source: <%=@crunch_algorithm.data_source.name%></h4>
+
+  <h4>Functions</h4>
+
+  <div id="functions" class="field">
+      <select id="function-selector" name="functions[name]">
+        <option value="select">select</option>
+      <% @allowed_functions.each do |af| %>
+        <option value="<%=af%>"><%=af%></option>
+      <% end %>
+    </select><br>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+

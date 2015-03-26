@@ -16,21 +16,30 @@
     <%= f.text_field :name %>
   </div>
 
-  <div class="field">
+  <% if @crunch_algorithm.data_source %>
     <%= f.label :data_source %><br>
-    <%= select("data_set", "data_source_id", DataSource.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false }) %>
-  </div>
-
-  <div id="functions" class="field">
+    <%= @crunch_algorithm.data_source.name %>
+    <br><br>
     <%= f.label :functions %><br>
-      <select id="function-selector" name="functions[name]">
-        <option value="select">select</option>
-      <% @allowed_functions.each do |af| %>
-        <option value="<%=af%>"><%=af%></option>
-      <% end %>
-    </select><br>
-  </div>
+    <%= link_to "Edit Functions", edit_functions_path%>
 
+  <% else %>
+    <div class="field">
+      <%= f.label :data_source %><br>
+      <%= select("crunch_algorithm", "data_source_id", DataSource.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false }) %>
+    </div>
+  <% end %>
+  <br><br>
+    <% if @crunch_algorithm.data_source %>
+    <%= f.label :data_source %><br>
+    <%= @crunch_algorithm.data_source.name %>
+    <br><br>
+  <% else %>
+    <div class="field">
+      <%= f.label :data_source %><br>
+      <%= select("crunch_algorithm", "data_source_id", DataSource.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false }) %>
+    </div>
+  <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>

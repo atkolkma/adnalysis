@@ -1,7 +1,7 @@
 require 'json'
 
 class CrunchAlgorithmsController < ApplicationController
-  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy]
+  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions]
 
   # GET /crunch_algorithms
   # GET /crunch_algorithms.json
@@ -23,7 +23,6 @@ class CrunchAlgorithmsController < ApplicationController
 
   # GET /crunch_algorithms/1/edit
   def edit
-    @allowed_functions = CrunchAlgorithm::ALLOWED_FUNCTIONS
   end
 
   # POST /crunch_algorithms
@@ -33,7 +32,7 @@ class CrunchAlgorithmsController < ApplicationController
 
     respond_to do |format|
       if @crunch_algorithm.save && @crunch_algorithm.set_dimensions
-        format.html { redirect_to @crunch_algorithm, notice: 'Crunch algorithm was successfully created.' }
+        format.html { redirect_to edit_functions_path(:id =>@crunch_algorithm.id), :notice => 'Crunch algorithm succesfully created' }
         format.json { render :show, status: :created, location: @crunch_algorithm }
       else
         format.html { render :new }
@@ -42,9 +41,8 @@ class CrunchAlgorithmsController < ApplicationController
     end
   end
 
-  def set_dimensions
-    self.dimensions = self.data_source.dimension_translations.map {|dt| {name: dt[:translated_name], data_type: dt[:data_type]}}
-    self.save
+  def edit_functions
+    @allowed_functions = CrunchAlgorithm::ALLOWED_FUNCTIONS
   end
 
   # PATCH/PUT /crunch_algorithms/1
@@ -85,6 +83,6 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id)
+      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id, :data_source_id)
     end
 end
