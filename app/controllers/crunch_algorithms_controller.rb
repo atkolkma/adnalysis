@@ -48,10 +48,10 @@ class CrunchAlgorithmsController < ApplicationController
   # PATCH/PUT /crunch_algorithms/1
   # PATCH/PUT /crunch_algorithms/1.json
   def update
-    functions = params[:functions]
+    functions = params[:crunch_algorithm][:functions]
     parsed_functions = []
     functions.each do |number, func|
-      parsed_functions << {name: func[:name].to_sym, args: eval(func[:args])} if func[:name] != ""
+      parsed_functions << func if func["name"] != ""
     end
     @crunch_algorithm.functions = parsed_functions
     respond_to do |format|
