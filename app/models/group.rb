@@ -8,6 +8,28 @@ module Group
 
   end
 
+  def self.form(number, algorithm)
+    (number) -> number+") <strong>Group:</strong>
+      <input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='group' />
+      <input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
+      <select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
+        <option>select</option>
+        <option>clicks</option>
+        <option>imps</option>
+      </select>
+      <span> AND </span>
+      <select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
+        <option>select</option>
+        <option>clicks</option>
+        <option>imps</option>
+      </select><br /><br />"
+  end
+
+
+  def self.translate_form_args(args_from_form)
+    [args_from_form["dimension1"], args_from_form["dimension2"]]
+  end
+
   
   def self.group_by_dimension(ary, dimension)
     with_benchmark("group by dimension: ") do 

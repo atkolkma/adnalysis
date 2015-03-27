@@ -26,7 +26,7 @@ class CrunchAlgorithm < ActiveRecord::Base
     functions_from_form.each do |number, func|
       parsed_functions << func if func["name"] != ""
     end
-    parsed_functions.map{|func| func[:new] ? {name: func[:name], args: Filter.args_form_to_persist(func[:args])} : func}
+    parsed_functions.map{|func| func[:new] ? {name: func[:name], args: func[:name].capitalize.constantize.translate_form_args(func[:args])} : func}
   end
 
 private

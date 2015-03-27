@@ -1,4 +1,4 @@
-class Filter < ActiveRecord::Base
+module Filter
 
 	def name
 		"Filter by field"
@@ -8,7 +8,7 @@ class Filter < ActiveRecord::Base
 
 	end
 
-	def self.args_form_to_persist(args_from_form)
+	def self.translate_form_args(args_from_form)
 		[
 			{
 				dimension: args_from_form["dimension1"],
@@ -21,6 +21,37 @@ class Filter < ActiveRecord::Base
 				value: args_from_form["value2"]
 			}
 		]
+	end
+
+	def self.form(number, algorithm)
+		(number) -> number+") <strong>Filter:</strong>
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='filter' />
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
+				<option>select</option>
+				<option>clicks</option>
+				<option>imps</option>
+			</select>
+			<select name='crunch_algorithm[functions]["+number+"][args][comparison1]'>
+				<option>></option>
+				<option>=</option>
+				<option><</option>
+			</select>
+			<input name='crunch_algorithm[functions]["+number+"][args][value1]' style='width:75px' type='number'></input>
+			<span>AND </span>
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
+				<option>select</option>
+				<option>clicks</option>
+				<option>imps</option>
+			</select>
+			<select name='crunch_algorithm[functions]["+number+"][args][comparison2]'>
+				<option>></option>
+				<option>=</option>
+				<option><</option>
+			<span>Value</span>
+			<input name='crunch_algorithm[functions]["+number+"][args][value2]' style='width:75px' type='number'></input>
+			</select> <br /><br />"
+
 	end
 
 	def self.filter_rows_by(ary, args)

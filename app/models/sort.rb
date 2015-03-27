@@ -17,27 +17,26 @@ module Sort
 		]
 	 end
 
-	def self.form
-		"<strong>Sort:</strong>
-			<span>dimension1 </span>
-			<select>dimension1
+	def self.form(number, algorithm)
+		(number) -> number+") <strong>Sort:</strong>
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='sort' />
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
 				<option>select</option>
 				<option>clicks</option>
 				<option>imps</option>
 			</select>
-			<span>direction </span>
-			<select>direction1
+			<select name='crunch_algorithm[functions]["+number+"][args][direction1]'>
 				<option>descending</option>
 				<option>ascending</option>
 			</select>
-			<span>dimension2 </span>
-			<select>dimension2
+			<span> AND </span>
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
 				<option>select</option>
 				<option>clicks</option>
 				<option>imps</option>
 			</select>
-			<span>direction </span>
-			<select>direction2
+			<select name='crunch_algorithm[functions]["+number+"][args][direction2]'>
 				<option>descending</option>
 				<option>ascending</option>
 			</select> <br /><br />"

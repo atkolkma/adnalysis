@@ -2,28 +2,32 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ->
-	truncate_form = (number) ->  number+") <strong>Truncate: </strong> number of rows <input style='width:75px' type='number' /> <br /><br />"
+	truncate_form = (number) ->  number+") <strong>Truncate: </strong> 
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='truncate' />
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
+			<input name='crunch_algorithm[functions]["+number+"][args][cutoff]' style='width:75px' type='number' />
+			<br /><br />"
 	filter_form = (number) -> number+") <strong>Filter:</strong>
 			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='filter' />
 			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
-			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>dimension1
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
 				<option>select</option>
 				<option>clicks</option>
 				<option>imps</option>
 			</select>
-			<select name='crunch_algorithm[functions]["+number+"][args][comparison1]'>direction1
+			<select name='crunch_algorithm[functions]["+number+"][args][comparison1]'>
 				<option>></option>
 				<option>=</option>
 				<option><</option>
 			</select>
 			<input name='crunch_algorithm[functions]["+number+"][args][value1]' style='width:75px' type='number'></input>
 			<span>AND </span>
-			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>dimension2
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
 				<option>select</option>
 				<option>clicks</option>
 				<option>imps</option>
 			</select>
-			<select name='crunch_algorithm[functions]["+number+"][args][comparison2]'>direction2
+			<select name='crunch_algorithm[functions]["+number+"][args][comparison2]'>
 				<option>></option>
 				<option>=</option>
 				<option><</option>
@@ -31,34 +35,38 @@ jQuery ->
 			<input name='crunch_algorithm[functions]["+number+"][args][value2]' style='width:75px' type='number'></input>
 			</select> <br /><br />"
 	group_form = (number) -> number+") <strong>Group:</strong>
-			<select>dimension1
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='group' />
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
 				<option>select</option>
 				<option>clicks</option>
 				<option>imps</option>
 			</select>
 			<span> AND </span>
-			<select>dimension2
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
 				<option>select</option>
 				<option>clicks</option>
 				<option>imps</option>
 			</select><br /><br />"
 	sorting_form = (number) -> number+") <strong>Sort:</strong>
-			<select>dimension1
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='sort' />
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
 				<option>select</option>
 				<option>clicks</option>
 				<option>imps</option>
 			</select>
-			<select>direction1
+			<select name='crunch_algorithm[functions]["+number+"][args][direction1]'>
 				<option>descending</option>
 				<option>ascending</option>
 			</select>
 			<span> AND </span>
-			<select>dimension2
+			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
 				<option>select</option>
 				<option>clicks</option>
 				<option>imps</option>
 			</select>
-			<select>direction2
+			<select name='crunch_algorithm[functions]["+number+"][args][direction2]'>
 				<option>descending</option>
 				<option>ascending</option>
 			</select> <br /><br />"
