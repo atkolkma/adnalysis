@@ -20,7 +20,14 @@
     <%= f.label :data_source %><br>
     <%= @crunch_algorithm.data_source.name %>
     <br><br>
-    <%= f.label :functions %><br>
+    <%= f.label :functions %>
+    <p>
+      <div style="margin-left: 2em">
+        <% @crunch_algorithm.functions.each do |f| %>
+          <b><%= f[:name] %></b> ( <%= [f[:args]].flatten.join(', ') %> )<br>
+        <% end %>
+      </div>
+  </p>
     <%= link_to "Edit Functions", edit_functions_path%>
 
   <% else %>
@@ -30,16 +37,7 @@
     </div>
   <% end %>
   <br><br>
-    <% if @crunch_algorithm.data_source %>
-    <%= f.label :data_source %><br>
-    <%= @crunch_algorithm.data_source.name %>
-    <br><br>
-  <% else %>
-    <div class="field">
-      <%= f.label :data_source %><br>
-      <%= select("crunch_algorithm", "data_source_id", DataSource.all.collect {|ds| [ ds.name, ds.id ] }, { :include_blank => false }) %>
-    </div>
-  <% end %>
+  
   <div class="actions">
     <%= f.submit %>
   </div>

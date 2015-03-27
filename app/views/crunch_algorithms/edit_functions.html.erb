@@ -13,9 +13,14 @@
   <% end %>
 
   <h1>Edit Functions for <%=@crunch_algorithm.name%></h1>
-  <h4>Data Source: <%=@crunch_algorithm.data_source.name%></h4>
 
   <h4>Functions</h4>
+
+  <% @crunch_algorithm.functions.each_with_index do |func, i| %>
+    <input type='hidden' class="function-setting" name="crunch_algorithm[functions][<%=i+1%>][name]" value="<%=func[:name]%>" />
+    <input type='hidden' name="crunch_algorithm[functions][<%=i+1%>][args]" value='<%=func[:args]%>' />
+    <%=i+1%>) <strong><%=func[:name]%>:</strong> <%=func[:args]%> <br /><br /> 
+  <% end %>
 
   <div id="functions" class="field" data-crunch-alg-id=<%=@crunch_algorithm.id%>>
       <select id="function-selector">

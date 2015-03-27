@@ -5,6 +5,7 @@ jQuery ->
 	truncate_form = (number) ->  number+") <strong>Truncate: </strong> number of rows <input style='width:75px' type='number' /> <br /><br />"
 	filter_form = (number) -> number+") <strong>Filter:</strong>
 			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='filter' />
+			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
 			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>dimension1
 				<option>select</option>
 				<option>clicks</option>
@@ -15,7 +16,7 @@ jQuery ->
 				<option>=</option>
 				<option><</option>
 			</select>
-			<input name='crunch_algorithm[functions]["+number+"][args][value1]' style='width:75px' type='text'></input>
+			<input name='crunch_algorithm[functions]["+number+"][args][value1]' style='width:75px' type='number'></input>
 			<span>AND </span>
 			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>dimension2
 				<option>select</option>
@@ -27,7 +28,7 @@ jQuery ->
 				<option>=</option>
 				<option><</option>
 			<span>Value</span>
-			<input name='crunch_algorithm[functions]["+number+"][args][value2]' style='width:75px' type='text'></input>
+			<input name='crunch_algorithm[functions]["+number+"][args][value2]' style='width:75px' type='number'></input>
 			</select> <br /><br />"
 	group_form = (number) -> number+") <strong>Group:</strong>
 			<select>dimension1
@@ -61,7 +62,7 @@ jQuery ->
 				<option>descending</option>
 				<option>ascending</option>
 			</select> <br /><br />"
-	num_functions = 0
+	num_functions = $('.function-setting').length
 	crunchAlgorithmId = $('#functions').data('crunch-alg-id')
 	$('#function-selector').on "change", ->
 	  value = $(this).val()

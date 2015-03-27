@@ -48,12 +48,8 @@ class CrunchAlgorithmsController < ApplicationController
   # PATCH/PUT /crunch_algorithms/1
   # PATCH/PUT /crunch_algorithms/1.json
   def update
-    functions = params[:crunch_algorithm][:functions]
-    parsed_functions = []
-    functions.each do |number, func|
-      parsed_functions << func if func["name"] != ""
-    end
-    @crunch_algorithm.functions = parsed_functions
+    @crunch_algorithm.functions = CrunchAlgorithm.parsed_functions_from_form(params[:crunch_algorithm][:functions])
+    
     respond_to do |format|
       if @crunch_algorithm.update(crunch_algorithm_params)
         format.html { redirect_to @crunch_algorithm, notice: 'Crunch algorithm was successfully updated.' }

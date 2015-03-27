@@ -20,6 +20,15 @@ class CrunchAlgorithm < ActiveRecord::Base
     self.save
   end
 
+  def self.parsed_functions_from_form(functions_from_form)
+    return functions_from_form unless functions_from_form
+    parsed_functions = []
+    functions_from_form.each do |number, func|
+      parsed_functions << func if func["name"] != ""
+    end
+    parsed_functions.map{|func| func[:new] ? {name: func[:name], args: Filter.args_form_to_persist(func[:args])} : func}
+  end
+
 private
   def set_default_functions
     self.functions ||= []
