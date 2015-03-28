@@ -1,7 +1,7 @@
 require 'json'
 
 class CrunchAlgorithmsController < ApplicationController
-  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions]
+  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions, :get_form]
 
   # GET /crunch_algorithms
   # GET /crunch_algorithms.json
@@ -61,6 +61,13 @@ class CrunchAlgorithmsController < ApplicationController
     end
   end
 
+  def get_form
+    number = params[:n]
+    function_name = params[:func]
+    function = function_name.capitalize.constantize
+    render html: function.form(number,@crunch_algorithm).html_safe
+  end
+
   # DELETE /crunch_algorithms/1
   # DELETE /crunch_algorithms/1.json
   def destroy
@@ -79,6 +86,6 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id, :data_source_id)
+      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id, :data_source_id, :number)
     end
 end

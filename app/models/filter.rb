@@ -24,34 +24,38 @@ module Filter
 	end
 
 	def self.form(number, algorithm)
-		(number) -> number+") <strong>Filter:</strong>
-			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='filter' />
-			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
-			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
-				<option>select</option>
-				<option>clicks</option>
-				<option>imps</option>
-			</select>
-			<select name='crunch_algorithm[functions]["+number+"][args][comparison1]'>
+		all_dimensions = algorithm.dimensions
+
+		form_string = "#{number}) <strong>Filter:</strong>
+			<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='filter' />
+			<input type='hidden' name='crunch_algorithm[functions][#{number}][new]' value='true' />
+			<select name='crunch_algorithm[functions][#{number}][args][dimension1]'>
+				<option>select</option>"
+		        all_dimensions.each do |dim|
+		          form_string += "<option>#{dim[:name]}</option>"
+		        end
+      form_string += "</select>
+			<select name='crunch_algorithm[functions][#{number}][args][comparison1]'>
 				<option>></option>
 				<option>=</option>
 				<option><</option>
 			</select>
-			<input name='crunch_algorithm[functions]["+number+"][args][value1]' style='width:75px' type='number'></input>
+			<input name='crunch_algorithm[functions][#{number}][args][value1]' style='width:75px' type='number'></input>
 			<span>AND </span>
-			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
-				<option>select</option>
-				<option>clicks</option>
-				<option>imps</option>
-			</select>
-			<select name='crunch_algorithm[functions]["+number+"][args][comparison2]'>
+			<select name='crunch_algorithm[functions][#{number}][args][dimension2]'>
+				<option>select</option>"
+		        all_dimensions.each do |dim|
+		          form_string += "<option>#{dim[:name]}</option>"
+		        end
+      form_string += "</select>
+			<select name='crunch_algorithm[functions][#{number}][args][comparison2]'>
 				<option>></option>
 				<option>=</option>
 				<option><</option>
 			<span>Value</span>
-			<input name='crunch_algorithm[functions]["+number+"][args][value2]' style='width:75px' type='number'></input>
+			<input name='crunch_algorithm[functions][#{number}][args][value2]' style='width:75px' type='number'></input>
 			</select> <br /><br />"
-
+			form_string
 	end
 
 	def self.filter_rows_by(ary, args)

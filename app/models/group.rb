@@ -9,20 +9,25 @@ module Group
   end
 
   def self.form(number, algorithm)
-    (number) -> number+") <strong>Group:</strong>
-      <input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='group' />
-      <input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
-      <select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
-        <option>select</option>
-        <option>clicks</option>
-        <option>imps</option>
-      </select>
+    string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
+
+    form_string = "#{number}) <strong>Group:</strong>
+      <input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='group' />
+      <input type='hidden' name='crunch_algorithm[functions][#{number}][new]' value='true' />
+      <select name='crunch_algorithm[functions][#{number}][args][dimension1]'>
+        <option>select</option>"
+        string_dimensions.each do |sd|
+          form_string += "<option>#{sd[:name]}</option>"
+        end
+      form_string += "</select>
       <span> AND </span>
-      <select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
-        <option>select</option>
-        <option>clicks</option>
-        <option>imps</option>
-      </select><br /><br />"
+      <select name='crunch_algorithm[functions][#{number}][args][dimension2]'>
+        <option>select</option>"
+        string_dimensions.each do |sd|
+          form_string += "<option>#{sd[:name]}</option>"
+        end
+      form_string += "</select><br /><br />"
+      form_string
   end
 
 

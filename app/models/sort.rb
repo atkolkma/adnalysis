@@ -1,3 +1,5 @@
+require 'erb'
+
 module Sort
 
 	def name
@@ -18,28 +20,36 @@ module Sort
 	 end
 
 	def self.form(number, algorithm)
-		(number) -> number+") <strong>Sort:</strong>
-			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='sort' />
-			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
-			<select name='crunch_algorithm[functions]["+number+"][args][dimension1]'>
-				<option>select</option>
-				<option>clicks</option>
-				<option>imps</option>
-			</select>
-			<select name='crunch_algorithm[functions]["+number+"][args][direction1]'>
+		all_dimensions = algorithm.dimensions
+		numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "integer" || dim[:data_type] == "decimal"}
+		string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
+
+		form_string = "#{number}) <strong>Sort:</strong>
+			<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='sort' />
+			<input type='hidden' name='crunch_algorithm[functions][#{number}][new]' value='true' />
+			<select name='crunch_algorithm[functions][#{number}][args][dimension1]'>
+				<option>select</option>"
+				numeric_dimensions.each do |nd|
+					form_string += "<option>#{nd[:name]}</option>"
+				end
+			form_string += "</select>
+			<select name='crunch_algorithm[functions][#{number}][args][direction1]'>
 				<option>descending</option>
 				<option>ascending</option>
 			</select>
 			<span> AND </span>
-			<select name='crunch_algorithm[functions]["+number+"][args][dimension2]'>
-				<option>select</option>
-				<option>clicks</option>
-				<option>imps</option>
-			</select>
-			<select name='crunch_algorithm[functions]["+number+"][args][direction2]'>
+			<select name='crunch_algorithm[functions][#{number}][args][dimension2]'>
+				<option>select</option>"
+				numeric_dimensions.each do |nd|
+					form_string += "<option>#{nd[:name]}</option>"
+				end
+			form_string += "</select>
+			<select name='crunch_algorithm[functions][#{number}][args][direction2]'>
 				<option>descending</option>
 				<option>ascending</option>
 			</select> <br /><br />"
+
+			form_string
 	end
 
 	def execute(ary)

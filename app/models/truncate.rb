@@ -13,10 +13,10 @@ module Truncate
 	end
 
 	def self.form(number, algorithm)
-		number+") <strong>Truncate: </strong> 
-			<input type='hidden' name='crunch_algorithm[functions]["+number+"][name]' value='truncate' />
-			<input type='hidden' name='crunch_algorithm[functions]["+number+"][new]' value='true' />
-			<input name='crunch_algorithm[functions]["+number+"][args][cutoff]' style='width:75px' type='number' />
+		"#{number}) <strong>Truncate: </strong> 
+			<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='truncate' />
+			<input type='hidden' name='crunch_algorithm[functions][#{number}][new]' value='true' />
+			<input name='crunch_algorithm[functions][#{number}][args][cutoff]' style='width:75px' type='number' />
 			<br /><br />"
 	end
 
