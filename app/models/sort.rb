@@ -7,16 +7,19 @@ module Sort
 	end
 
 	 def self.translate_form_args(args_from_form)
-	    [
+	    translated_args = [
 			{
 				dimension: args_from_form["dimension1"],
-				direction: args_from_form["direction1"],
-			},
-			{
-				dimension: args_from_form["dimension2"],
-				direction: args_from_form["direction2"],
+				direction: args_from_form["direction1"]
 			}
 		]
+		if args_from_form["dimension2"] && args_from_form["dimension2"] != "select"
+			translated_args << {
+				dimension: args_from_form["dimension2"],
+				direction: args_from_form["direction2"]
+			}
+		end
+		translated_args
 	 end
 
 	def self.form(number, algorithm)

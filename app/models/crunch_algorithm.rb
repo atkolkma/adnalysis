@@ -21,6 +21,7 @@ class CrunchAlgorithm < ActiveRecord::Base
   end
 
   def self.parsed_functions_from_form(functions_from_form)
+    ap functions_from_form
     return functions_from_form unless functions_from_form
     parsed_functions = []
     functions_from_form.each do |number, func|
