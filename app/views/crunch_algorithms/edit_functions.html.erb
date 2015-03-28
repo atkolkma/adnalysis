@@ -23,13 +23,13 @@
   <% end %>
 
   <div id="functions" class="field" data-crunch-alg-id=<%=@crunch_algorithm.id%>>
-      <select id="function-selector">
-        <option value="select">select</option>
-      <% @allowed_functions.each do |af| %>
-        <option value="<%=af%>"><%=af%></option>
-      <% end %>
-    </select><br>
   </div>
+  <select id="function-selector">
+    <option value="select">select</option>
+    <% @allowed_functions.each do |af| %>
+      <option value="<%=af%>"><%=af%></option>
+    <% end %>
+  </select><br><br><br>
 
   <div class="actions">
     <%= f.submit %>
