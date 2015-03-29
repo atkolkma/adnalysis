@@ -1,8 +1,8 @@
 require 'json'
 
 class CrunchAlgorithmsController < ApplicationController
-  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions, :get_form]
-
+  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions, :update_functions, :functions, :get_forms]
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
   # GET /crunch_algorithms
   # GET /crunch_algorithms.json
   def index
@@ -48,8 +48,6 @@ class CrunchAlgorithmsController < ApplicationController
   # PATCH/PUT /crunch_algorithms/1
   # PATCH/PUT /crunch_algorithms/1.json
   def update
-    @crunch_algorithm.functions = CrunchAlgorithm.parsed_functions_from_form(params[:crunch_algorithm][:functions])
-    
     respond_to do |format|
       if @crunch_algorithm.update(crunch_algorithm_params)
         format.html { redirect_to @crunch_algorithm, notice: 'Crunch algorithm was successfully updated.' }
@@ -61,16 +59,22 @@ class CrunchAlgorithmsController < ApplicationController
     end
   end
 
-  def get_form
-    number = params[:n]
-    function_name = params[:func]
-    function = function_name.capitalize.constantize
-    render html: function.form(number,@crunch_algorithm).html_safe
+  def get_forms
+    render json: @crunch_algorithm.function_forms.to_json
   end
 
   def delete_function
     function_index = params[:func_index]
     render json: {success: true}
+  end
+
+  def functions
+    render json: @crunch_algorithm.functions.to_json
+  end  
+
+  def update_functions
+    @crunch_algorithm.functions = JSON.parse(request.body.read)["functions"]
+    @crunch_algorithm.save
   end
 
   # DELETE /crunch_algorithms/1
@@ -91,6 +95,6 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id, :data_source_id, :number)
+      params.permit(:name, :category, :report_id, :data_source_id, :number, :functions)
     end
 end

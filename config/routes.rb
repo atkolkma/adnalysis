@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   root 'reports#index'
 
   get 'crunch_algorithms/:id/get_form', to: 'crunch_algorithms#get_form'
+  get 'crunch_algorithms/:id/get_forms', to: 'crunch_algorithms#get_forms'
+  get 'crunch_algorithms/:id/functions', to: 'crunch_algorithms#functions'
+  put 'crunch_algorithms/:id/update_functions', to: 'crunch_algorithms#update_functions'
   get 'crunch_algorithms/:id/delete_function', to: 'crunch_algorithms#delete_function'
   get 'reports/:id/crunch', to: 'reports#crunch', as: 'crunch' 
   get 'crunch_algorithms/:id/edit_functions', to: 'crunch_algorithms#edit_functions', as: 'edit_functions' 

@@ -17,7 +17,7 @@
       <tr>
         <td><%= crunch_algorithm.name %></td>
         <td><% crunch_algorithm.functions.each_with_index do |f, i|%>
-            <%= i+1 %>) <%= f[:name].to_s.gsub('_',' ').titleize  %> <br>
+            <%= i+1 %>) <%= f["name"].to_s.gsub('_',' ').titleize  %> <br>
           <% end %>
         </td>
         <td><%= crunch_algorithm.data_source.name if crunch_algorithm.data_source %></td>

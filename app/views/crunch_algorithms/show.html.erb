@@ -11,7 +11,7 @@
   <strong>Functions:</strong>
     <div style="margin-left: 2em">
       <% @crunch_algorithm.functions.each do |f| %>
-        <b><%= f[:name] %></b> ( <%= [f[:args]].flatten.join(', ') %> )<br>
+        <b><%= f["name"] %></b> ( <%= [f["args"]].flatten.join(', ') %> )<br>
       <% end %>
     </div>
 </p>

@@ -8,8 +8,8 @@ module Truncate
     	args_from_form["cutoff"].to_i
 	end
 
-	def self.execute(ary, cutoff)
-	  ary[0..(cutoff-1)]
+	def self.execute(ary, args)
+	  ary[0..(args["cutoff"]-1)]
 	end
 
 	def self.hidden_form_input(function, index)
@@ -20,11 +20,8 @@ module Truncate
 	  hidden_input
 	end
 
-	def self.form(number, algorithm)
-		"#{number}) <strong>Truncate: </strong> 
-			<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='Truncate' />
-			<input name='crunch_algorithm[functions][#{number}][args][cutoff]' style='width:75px' type='number' />
-			<br /><br />"
+	def self.form(algorithm)
+		"<input ng-model='func.args.cutoff' type='number' min='1'/>"
 	end
 
 end

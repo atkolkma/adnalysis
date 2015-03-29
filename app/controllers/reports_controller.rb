@@ -4,10 +4,6 @@ class ReportsController < ApplicationController
 
   def crunch
     @report.load_data
-    # @sort_rules = [{dimension: 'adgroup', direction: "asc"}, {dimension: 'match_type', direction: "desc"}, {dimension: 'converted_clicks', direction: "desc"}, {dimension: 'cost', direction: "asc", conversion: ".to_f"}]
-    # @algorithm = [{name: :filter_rows, args: 0},{name: :group_by_dimensions, args: ["adgroup", "match_type"]},{name: :sort_by_dim, args: @sort_rules},{name: :truncate, args: 100}]
-    # @report.crunch_algorithm.functions = @algorithm
-    # @report.crunch_algorithm.save
     @report.report_preview_rows = ReportCruncher.crunch(@report.data_set.data, @report.crunch_algorithm.functions) #ReportCruncher.truncate(ReportCruncher.sort_by_dim(ReportCruncher.group_by_dimensions(ReportCruncher.filter_rows(@report.data, 0), ["adgroup", "match_type"]), @sort_rules),100)
     @report.save
   end
@@ -35,8 +31,6 @@ class ReportsController < ApplicationController
   # POST /reports
   # POST /reports.json
   def create
-    report_params[:source_files] = ['asdads']
-
     @report = Report.new(report_params)
 
     respond_to do |format|
@@ -54,7 +48,6 @@ class ReportsController < ApplicationController
   # PATCH/PUT /reports/1.json
   def update
     respond_to do |format|
-    report_params[:source_files] = ['asdads']
       
       if @report.update(report_params)
         format.html { redirect_to @report, notice: 'Report was successfully updated.' }

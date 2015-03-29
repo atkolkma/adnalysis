@@ -4,6 +4,16 @@ module Filter
 		"Filter by field"
 	end
 
+	def self.args_template
+		{
+			dimension: dim,
+			comparison: {
+				string: ['equals', 'contains', 'contained by'],
+				numeric: ['>', '=', '<']
+			}
+		}
+	end
+
 	def self.execute(ary, args)
 		filter_rows_by(ary, args)
 	end
@@ -16,56 +26,45 @@ module Filter
 			}
 	end
 
-	def self.hidden_form_input(function, index)
-		ap function
-		hidden_input = "<input type='hidden' class='function-setting' name='crunch_algorithm[functions][#{index+1}][name]' value='Filter' />"
-	  unless function[:args].blank?
-	    hidden_input += "<input type='hidden' name='crunch_algorithm[functions][#{index+1}][args][dimension]' value='#{function[:args][:dimension]}' />"+
-	    "<input type='hidden' name='crunch_algorithm[functions][#{index+1}][args][comparison]' value='#{function[:args][:comparison]}' />"+
-	    "<input type='hidden' name='crunch_algorithm[functions][#{index+1}][args][value]' value='#{function[:args][:value]}' />"
-	  end
-		hidden_input
-	end
-
-	def self.form(number, algorithm)
+	def self.form(algorithm)
 		all_dimensions = algorithm.dimensions
+    numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "integer" || dim[:data_type] == "decimal"}
+    string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
 
-		form_string = "
-		#{number}) <strong>Filter:</strong>
-		<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='Filter' />
-		<div class='dynamic-datatype'>
-			<select  class='datatype-selector' name='crunch_algorithm[functions][#{number}][args][dimension]'>
-				<option>select</option>"
-		        all_dimensions.each do |dim|
-		          form_string += "<option data-datatype='#{dim[:data_type]}'>#{dim[:name]}</option>"
-		        end
-    	form_string += "
-    		</select>
-			<select class='datatype-responder numeric' name='crunch_algorithm[functions][#{number}][args][comparison]'>
-				<option>></option>
-				<option>=</option>
-				<option><</option>
-			</select>
-			<input class='datatype-responder numeric' name='crunch_algorithm[functions][#{number}][args][value]' style='width:75px' type='number'></input>
-			<select class='datatype-responder string' name='crunch_algorithm[functions][#{number}][args][comparison]'>
-				<option>equals</option>
-				<option>contains</option>
-				<option>contained in</option>
-			</select> 
-			<input class='datatype-responder string' name='crunch_algorithm[functions][#{number}][args][value]' style='width:175px' type='text'></input>
-		</div>
-		<br /><br />"
-		form_string
+    form_string = "
+      <select ng-model='func.args.dimension'>
+        <option>select</option>"
+        string_dimensions.each do |sd|  
+          form_string += "<option>#{sd[:name]}</option>"
+        end
+        numeric_dimensions.each do |nd|  
+          form_string += "<option>#{nd[:name]}</option>"
+        end
+      form_string += "
+      </select>
+      <select ng-model='func.args.comparison'>
+        <option>select</option>
+        <option>></option>
+        <option>=</option>
+        <option><</option>        
+        <option>equals</option>
+        <option>contains</option>
+        <option>contained by</option>
+      </select>
+      <input type='number' ng-model='func.args.value'/>"
+
+      form_string
 	end
 
 	def self.filter_rows_by(ary, args)
-    if  args[:comparison] == '>'
+		ap args
+    if  args["comparison"] == '>'
       ary.keep_if do |row|
-        row[args[:dimension]] > args[:value].to_f
+        row[args["dimension"]] > args["value"].to_f
       end
-    elsif args[:comparison] == '<'
+    elsif args["comparison"] == '<'
       ary.keep_if do |row|
-        row[args[:dimension]] < args[:value].to_f
+        row[args["dimension"]] < args["value"].to_f
       end
     else
     end

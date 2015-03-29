@@ -1,3 +1,7 @@
+<% content_for :head do %>
+  <script src="/components/angular/angular.min.js"></script>
+  <script src="/javascripts/controllers/edit_functions_controller.js"></script>
+<% end %>
 <p id="notice"><%= notice %></p>
 <%= form_for(@crunch_algorithm) do |f| %>
   <% if @crunch_algorithm.errors.any? %>
@@ -16,22 +20,26 @@
 
   <h4>Functions</h4>
 
-  <% @crunch_algorithm.functions.each_with_index do |func, i| %>
+  <div ng-app="functionsEditor">
     <div class="function-row">
-      <%= CrunchAlgorithm.hidden_form_input(func, i).html_safe %>
-      <span data-function-id="<%=i+1%>" style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove delete-function' aria-hidden="true"> </span>
-      <%=i+1%>) <strong><%=func[:name]%>:</strong> <%=func[:args]%> <br /><br /> 
+      <div ng-controller="functionsEditorController">
+        <div ng-repeat="func in functions" class="function-row">
+          <span style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove' ng-click="deleteFunction($index)" aria-hidden="true"></span>
+            {{$index+1}}) <span ng-show="!isEditingFunction($index)">{{func.name}} : {{func.args}}</span>
+            <span ng-show="isEditingFunction($index)">
+              <select style="display:inline" ng-model="func.name">
+                <option ng-repeat="name in functionNames" value="{{name}}">{{name}}</option>
+              </select>
+              <div style="display:inline" ng-include="func.name != null ? func.name : null" ></div>
+              <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-ok' ng-click="commitFunction()" aria-hidden="true"></span>
+            </span>
+          <br><br>
+        </div>
+        <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-plus' ng-click="addFunction($index)" aria-hidden="true"></span> <br><br> 
+        <button ng-click="updateFunctions()">Update Functions</button>
+      </div>
     </div>
-  <% end %>
-
-  <div id="functions" class="field" data-crunch-alg-id=<%=@crunch_algorithm.id%>>
   </div>
-  <select id="function-selector">
-    <option value="select">select</option>
-    <% @allowed_functions.each do |af| %>
-      <option value="<%=af%>"><%=af%></option>
-    <% end %>
-  </select><br><br><br>
 
   <div class="actions">
     <%= f.submit %>
