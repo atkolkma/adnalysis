@@ -2,7 +2,7 @@ module ReportCruncher
 
   def self.crunch(ary, functions)
     functions.each do |f|
-      ary = self.send(f[:name], ary, f[:args])
+      ary = f[:name].constantize.send('execute', ary, f[:args])
     end
     ary
   end

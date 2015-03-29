@@ -17,9 +17,11 @@
   <h4>Functions</h4>
 
   <% @crunch_algorithm.functions.each_with_index do |func, i| %>
-    <input type='hidden' class="function-setting" name="crunch_algorithm[functions][<%=i+1%>][name]" value="<%=func[:name]%>" />
-    <input type='hidden' name="crunch_algorithm[functions][<%=i+1%>][args]" value='<%=func[:args]%>' />
-    <%=i+1%>) <strong><%=func[:name]%>:</strong> <%=func[:args]%> <br /><br /> 
+    <div class="function-row">
+      <%= CrunchAlgorithm.hidden_form_input(func, i).html_safe %>
+      <span data-function-id="<%=i+1%>" style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove delete-function' aria-hidden="true"> </span>
+      <%=i+1%>) <strong><%=func[:name]%>:</strong> <%=func[:args]%> <br /><br /> 
+    </div>
   <% end %>
 
   <div id="functions" class="field" data-crunch-alg-id=<%=@crunch_algorithm.id%>>

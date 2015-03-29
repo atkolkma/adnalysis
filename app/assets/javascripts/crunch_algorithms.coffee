@@ -2,6 +2,12 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ->
+	jQuery.ajaxSetup({async:false})
+	$('.delete-function').on "click", ->
+	  func_deleter = $(this)
+	  func_deleter.parent().hide()
+	  func_deleter.siblings().prop('disabled', true)
+	  $.get("delete_function.json?func_index="+func_deleter.data('function-id'))
 	num_functions = $('.function-setting').length
 	crunchAlgorithmId = $('#functions').data('crunch-alg-id')
 	$('#function-selector').on "change", ->

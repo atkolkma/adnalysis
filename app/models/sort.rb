@@ -22,14 +22,17 @@ module Sort
 		translated_args
 	 end
 
+	def self.hidden_form_input(function, index)
+
+	end
+
 	def self.form(number, algorithm)
 		all_dimensions = algorithm.dimensions
 		numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "integer" || dim[:data_type] == "decimal"}
 		string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
 
 		form_string = "#{number}) <strong>Sort:</strong>
-			<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='sort' />
-			<input type='hidden' name='crunch_algorithm[functions][#{number}][new]' value='true' />
+			<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='Sort' />
 			<select name='crunch_algorithm[functions][#{number}][args][dimension1]'>
 				<option>select</option>"
 				numeric_dimensions.each do |nd|

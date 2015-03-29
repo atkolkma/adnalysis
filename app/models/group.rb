@@ -12,8 +12,7 @@ module Group
     string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
 
     form_string = "#{number}) <strong>Group:</strong>
-      <input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='group' />
-      <input type='hidden' name='crunch_algorithm[functions][#{number}][new]' value='true' />
+      <input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='Group' />
       <select name='crunch_algorithm[functions][#{number}][args][dimension1]'>
         <option>select</option>"
         string_dimensions.each do |sd|

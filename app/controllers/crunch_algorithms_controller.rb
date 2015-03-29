@@ -68,6 +68,11 @@ class CrunchAlgorithmsController < ApplicationController
     render html: function.form(number,@crunch_algorithm).html_safe
   end
 
+  def delete_function
+    function_index = params[:func_index]
+    render json: {success: true}
+  end
+
   # DELETE /crunch_algorithms/1
   # DELETE /crunch_algorithms/1.json
   def destroy
