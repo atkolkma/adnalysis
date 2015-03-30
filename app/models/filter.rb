@@ -4,6 +4,16 @@ module Filter
 		"Filter by field"
 	end
 
+	def self.args_template
+		{
+			dimension: dim,
+			comparison: {
+				string: ['equals', 'contains', 'contained by'],
+				numeric: ['>', '=', '<']
+			}
+		}
+	end
+
 	def self.execute(ary, args)
 		filter_rows_by(ary, args)
 	end

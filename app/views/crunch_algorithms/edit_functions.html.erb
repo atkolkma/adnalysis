@@ -27,18 +27,17 @@
           <span style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove' ng-click="deleteFunction($index)" aria-hidden="true"></span>
             {{$index+1}}) <span ng-show="!isEditingFunction($index)">{{func.name}} : {{func.args}}</span>
             <span ng-show="isEditingFunction($index)">
-              <select >
-                <option value="">Select</option>
-                <option value="">Name1</option>
-                <option value="">Name2</option>
-                <option value="">Name3</option>
+              <select ng-model="func.name" >
+                <option ng-repeat="name in functionNames" value="{{name}}">{{name}}</option>
+              </select>              
+              <select ng-model="func.args.dimension" >
+                <option ng-repeat="name in dimensionNames" value="{{name}}">{{name}}</option>
+              </select>            
+              <select ng-model="func.args.direction" >
+                <option ng-repeat="direction in directionOptions" value="{{direction}}">{{direction}}</option>
               </select>
-              <select ng-model="editing" ng-change="updateEditing(name)" ng-options="name for name in functionNames">
-              </select>
+              <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-ok' ng-click="commitFunction()" aria-hidden="true"></span>
             </span>
-          <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-ok' ng-click="commitFunction()" aria-hidden="true"></span>
-
-          
           <br><br>
         </div>
         <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-plus' ng-click="addFunction($index)" aria-hidden="true"></span> <br><br> 

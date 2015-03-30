@@ -26,9 +26,12 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 		$scope.functions[$scope.editingFunctionIndex] = updated;
 	};
 
-	$scope.functionNames = ['Henry', 'Suzanne', 'Brenda'];
+	$scope.functionNames = ['Truncate', 'Filter', 'Sort', 'Group'];
+	$scope.dimensionNames = ['clicks', 'imps', 'conversions', 'cost'];
+	$scope.directionOptions = ['Ascending', 'Descending'];
 
 	$scope.commitFunction = function() {
+		console.log($scope.functions);
 		$scope.editingFunctionIndex = -1;
 	};
 
@@ -38,8 +41,9 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 		$scope.editing = $scope.functions[$scope.editingFunctionIndex];
 	};
 
-	$scope.updateEditing = function(name) {
-		$scope.functions[$scope.editingFunctionIndex]['name'] = name;
+	$scope.updateEditing = function() {
+		$scope.functions[$scope.editingFunctionIndex] = $scope.editingFunction;
+		console.log($scope.editingFunction);
 		console.log($scope.functions);
 	};
 
