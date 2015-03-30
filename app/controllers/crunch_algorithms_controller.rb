@@ -2,7 +2,7 @@ require 'json'
 
 class CrunchAlgorithmsController < ApplicationController
   before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions, :update_function_settings, :function_settings, :get_form]
-
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
   # GET /crunch_algorithms
   # GET /crunch_algorithms.json
   def index
@@ -72,12 +72,12 @@ class CrunchAlgorithmsController < ApplicationController
   end
 
   def function_settings
-    render json: [{name: "sort", args: {dimension: "clicks", direction: "asc"}}, {name: "group", args: [{dimension: "clicks"}, {dimension: "imps"}]}].to_json
+    render json: @crunch_algorithm.function_settings.to_json
   end  
 
   def update_function_settings
-    @crunch_algorithm.function_settings = @request_payload
-    redirect_to @crunch_algorithm, notice: 'Functions were successfully updated.'
+    @crunch_algorithm.function_settings = JSON.parse(request.body.read)["functions"]
+    @crunch_algorithm.save
   end
 
   # DELETE /crunch_algorithms/1
@@ -98,6 +98,6 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.require(:crunch_algorithm).permit(:name, :functions, :category, :report_id, :data_source_id, :number, :function_settings)
+      params.permit(:name, :functions, :category, :report_id, :data_source_id, :number, :function_settings)
     end
 end
