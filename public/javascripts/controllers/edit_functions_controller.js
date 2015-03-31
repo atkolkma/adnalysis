@@ -8,6 +8,17 @@ var data = [
     'data2-banana'
 ];
 
+var partials = [];
+
+var getForms = function() {
+		$http({
+			url: "get_forms",
+			method: "GET"
+		}).success(function(data, status) {
+			partials = data;
+		});
+	}; 
+
 var partials = [    
     {
         name: 'Group',
