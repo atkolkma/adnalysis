@@ -40,6 +40,76 @@ module Filter
 	def self.form(number, algorithm)
 		all_dimensions = algorithm.dimensions
 
+		[
+      dimension: [
+        numeric: [
+          "option1",
+          "option2",
+          "option3"
+      	],
+    		string: [
+          "option1",
+          "option2",
+          "option3"
+      	]
+    	],
+    	comparision: [
+        numeric: [
+          "<",
+          "=",
+          "<"
+      	],
+    		string: [
+          "equals",
+          "contains",
+          "contained in"
+      	]
+    	],
+      value: [
+        numeric: "real_numbers"
+    		string: "strings"
+    	]
+    ]
+
+		[{
+      var: "dimension"
+      select: "one"
+      from: [
+          {value: "numericdim1", type: "numeric"},
+          {value: "numericdim2", type: "numeric"},
+          {value: "numericdim3", type: "numeric"},
+          {value: "stringdim1", type: "string"},
+          {value: "stringdim2", type: "string"},
+          {value: "stringdim3", type: "string"}
+      	]
+    	},
+    	{
+    	var: "comparision"
+    	select: "one_by_dimension" 
+    	from: [
+        numeric: [
+          "<",
+          "=",
+          "<"
+      	],
+    		string: [
+          "equals",
+          "contains",
+          "contained in"
+      	]
+    	]},
+    	{
+      var: "value",
+      select: "input_by_dimension" 
+      from: [
+        numeric: "real_numbers",
+    		string: "strings"
+    	]}
+    ]
+
+    
+
+
 		form_string = "
 		#{number}) <strong>Filter:</strong>
 		<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='Filter' />

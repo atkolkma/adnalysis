@@ -60,10 +60,9 @@ class CrunchAlgorithmsController < ApplicationController
   end
 
   def get_form
-    number = params[:n]
     function_name = params[:func]
     function = function_name.capitalize.constantize
-    render html: function.form(number,@crunch_algorithm).html_safe
+    render html: function.form(@crunch_algorithm).html_safe
   end
 
   def delete_function

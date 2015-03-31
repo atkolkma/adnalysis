@@ -27,15 +27,10 @@
           <span style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove' ng-click="deleteFunction($index)" aria-hidden="true"></span>
             {{$index+1}}) <span ng-show="!isEditingFunction($index)">{{func.name}} : {{func.args}}</span>
             <span ng-show="isEditingFunction($index)">
-              <select ng-model="func.name" >
+              <select ng-model="func.name" ng-change="getForm(func.name)">
                 <option ng-repeat="name in functionNames" value="{{name}}">{{name}}</option>
-              </select>              
-              <select ng-model="func.args.dimension" >
-                <option ng-repeat="name in dimensionNames" value="{{name}}">{{name}}</option>
-              </select>            
-              <select ng-model="func.args.direction" >
-                <option ng-repeat="direction in directionOptions" value="{{direction}}">{{direction}}</option>
               </select>
+              <div ng-include="func.name != null ? func.name : null" ></div>
               <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-ok' ng-click="commitFunction()" aria-hidden="true"></span>
             </span>
           <br><br>

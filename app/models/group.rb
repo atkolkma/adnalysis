@@ -8,25 +8,26 @@ module Group
 
   end
 
-  def self.form(number, algorithm)
+  def self.form(algorithm)
     string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
 
-    form_string = "#{number}) <strong>Group:</strong>
-      <input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='Group' />
-      <select name='crunch_algorithm[functions][#{number}][args][dimension1]'>
-        <option>select</option>"
-        string_dimensions.each do |sd|
-          form_string += "<option>#{sd[:name]}</option>"
-        end
-      form_string += "</select>
-      <span> AND </span>
-      <select name='crunch_algorithm[functions][#{number}][args][dimension2]'>
-        <option>select</option>"
-        string_dimensions.each do |sd|
-          form_string += "<option>#{sd[:name]}</option>"
-        end
-      form_string += "</select><br /><br />"
-      form_string
+    form_string = "
+    <select ng-model='func.args1' ng-change=\"console.log(\'functions\')\">
+      <option>select</option>"
+      string_dimensions.each do |sd|  
+        form_string += "<option>#{sd[:name]}</option>"
+      end
+    form_string += "
+    </select>            
+    <select ng-model='func.args2' >
+      <option>select</option>"
+      string_dimensions.each do |sd|  
+        form_string += "<option>#{sd[:name]}</option>"
+      end
+    form_string += "
+    </select>"
+
+    form_string
   end
 
 
