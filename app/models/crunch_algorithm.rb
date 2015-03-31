@@ -36,6 +36,15 @@ class CrunchAlgorithm < ActiveRecord::Base
     parsed_functions.map{|func| {name: func[:name], args: func[:name].capitalize.constantize.translate_form_args(func[:args])}}
   end
 
+  def function_forms
+    forms = []
+    ALLOWED_FUNCTIONS.each do |af|
+      forms << {name: af, content: af.constantize.form(self)}
+    end
+
+    forms
+  end
+
 private
   def set_default_functions
     self.functions ||= []

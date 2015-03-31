@@ -1,7 +1,7 @@
 require 'json'
 
 class CrunchAlgorithmsController < ApplicationController
-  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions, :update_function_settings, :function_settings, :get_form]
+  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions, :update_function_settings, :function_settings, :get_form, :get_forms]
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
   # GET /crunch_algorithms
   # GET /crunch_algorithms.json
@@ -57,6 +57,10 @@ class CrunchAlgorithmsController < ApplicationController
         format.json { render json: @crunch_algorithm.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def get_forms
+    render json: @crunch_algorithm.function_forms.to_json
   end
 
   def get_form

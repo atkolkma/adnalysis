@@ -20,10 +20,8 @@ module Truncate
 	  hidden_input
 	end
 
-	def self.form(number, algorithm)
-		"#{number}) <strong>Truncate: </strong> 
-			<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='Truncate' />
-			<input name='crunch_algorithm[functions][#{number}][args][cutoff]' style='width:75px' type='number' />
+	def self.form(algorithm)
+		"<input ng-model='func.args.cutoff' type='number' min='1'/>
 			<br /><br />"
 	end
 

@@ -27,7 +27,7 @@
           <span style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove' ng-click="deleteFunction($index)" aria-hidden="true"></span>
             {{$index+1}}) <span ng-show="!isEditingFunction($index)">{{func.name}} : {{func.args}}</span>
             <span ng-show="isEditingFunction($index)">
-              <select ng-model="func.name" ng-change="getForm(func.name)">
+              <select ng-model="func.name">
                 <option ng-repeat="name in functionNames" value="{{name}}">{{name}}</option>
               </select>
               <div ng-include="func.name != null ? func.name : null" ></div>

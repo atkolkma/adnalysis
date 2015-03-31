@@ -17,7 +17,7 @@ module Sort
 		]
 	 end
 
-	def self.form
+	def self.form(algorithm)
 		"<strong>Sort:</strong>
 			<span>dimension1 </span>
 			<select>dimension1

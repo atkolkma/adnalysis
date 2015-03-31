@@ -12,14 +12,15 @@ module Group
     string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
 
     form_string = "
-    <select ng-model='func.args1' ng-change=\"console.log(\'functions\')\">
+    <div ng-init='func.args = []'></div>
+    <select ng-model='func.args[0]'>
       <option>select</option>"
       string_dimensions.each do |sd|  
         form_string += "<option>#{sd[:name]}</option>"
       end
     form_string += "
     </select>            
-    <select ng-model='func.args2' >
+    <select ng-model='func.args[1]' >
       <option>select</option>"
       string_dimensions.each do |sd|  
         form_string += "<option>#{sd[:name]}</option>"

@@ -3,49 +3,27 @@ functionsEditor = angular.module('functionsEditor',['controllers'])
 
 controllers = angular.module('controllers',[]);
 
-var data = [
-    'data1-apple',
-    'data2-banana'
-];
+controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeout', '$filter', '$sce', '$templateCache', function($scope, $http, $timeout, $filter, $sce, $templateCache) {
+	'use strict';
+	$scope.functions = {};
 
-var partials = [];
-
-var getForms = function() {
+	$scope.getForms = function() {
+		var partials = [];
 		$http({
 			url: "get_forms",
 			method: "GET"
 		}).success(function(data, status) {
 			partials = data;
+		}).then(function() {
+			for(var i in partials){
+		        $templateCache.put(partials[i].name, partials[i].content);
+		    }
+		    console.log($templateCache.get('Truncate'));
 		});
+
+		
 	}; 
 
-var partials = [    
-    {
-        name: 'Group',
-        content: '<div>group template{{3+1}}</div>'
-    },
-    {
-        name: 'Sort',
-        content: '<div>sort template</div>'
-    },    
-    {
-        name: 'Filter',
-        content: '<div>filter temp</div>'
-    },
-    {
-        name: 'Truncate',
-        content: '<div>truncate template</div>'
-    }
-];
-
-controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeout', '$filter', '$sce', '$templateCache', function($scope, $http, $timeout, $filter, $sce, $templateCache) {
-	'use strict';
-	$scope.functions = {};
-
-	$scope.functionSelectorHtml = "<h1>sadfadsf</h1>";
-
-// 	$scope.html = '<ul><li>render me please</li></ul>';
-// $scope.trustedHtml = $sce.trustAsHtml($scope.html);
 	$scope.updateFunctions = function() {
 		$http({
 			url: "update_function_settings.json",
@@ -105,10 +83,7 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 	};
 
 	$scope.init = function() {
-		for(var i in partials){
-	        $templateCache.put(partials[i].name, partials[i].content);
-	    }
-	    $scope.partials = partials;
+		$scope.getForms();
 
 		$http({
 			url: "function_settings",

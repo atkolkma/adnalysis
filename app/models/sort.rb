@@ -26,7 +26,8 @@ module Sort
 
 	end
 
-	def self.form(number, algorithm)
+	def self.form(algorithm)
+		number = 1
 		all_dimensions = algorithm.dimensions
 		numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "integer" || dim[:data_type] == "decimal"}
 		string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
