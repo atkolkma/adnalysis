@@ -18,29 +18,9 @@ module Sort
 	 end
 
 	def self.form(algorithm)
-		"<strong>Sort:</strong>
-			<span>dimension1 </span>
-			<select>dimension1
-				<option>select</option>
-				<option>clicks</option>
-				<option>imps</option>
-			</select>
-			<span>direction </span>
-			<select>direction1
-				<option>descending</option>
-				<option>ascending</option>
-			</select>
-			<span>dimension2 </span>
-			<select>dimension2
-				<option>select</option>
-				<option>clicks</option>
-				<option>imps</option>
-			</select>
-			<span>direction </span>
-			<select>direction2
-				<option>descending</option>
-				<option>ascending</option>
-			</select> <br /><br />"
+    string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
+    numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "numeric"}
+		
 	end
 
 	def execute(ary)

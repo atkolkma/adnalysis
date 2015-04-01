@@ -21,8 +21,7 @@ module Truncate
 	end
 
 	def self.form(algorithm)
-		"<input ng-model='func.args.cutoff' type='number' min='1'/>
-			<br /><br />"
+		"<input ng-model='func.args.cutoff' type='number' min='1'/>"
 	end
 
 end

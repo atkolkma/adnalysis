@@ -39,34 +39,32 @@ module Filter
 
 	def self.form(algorithm)
 		all_dimensions = algorithm.dimensions
-    number = 1
+    numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "integer" || dim[:data_type] == "decimal"}
+    string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
 
-		form_string = "
-		#{number}) <strong>Filter:</strong>
-		<input type='hidden' name='crunch_algorithm[functions][#{number}][name]' value='Filter' />
-		<div class='dynamic-datatype'>
-			<select  class='datatype-selector' name='crunch_algorithm[functions][#{number}][args][dimension]'>
-				<option>select</option>"
-		        all_dimensions.each do |dim|
-		          form_string += "<option data-datatype='#{dim[:data_type]}'>#{dim[:name]}</option>"
-		        end
-    	form_string += "
-    		</select>
-			<select class='datatype-responder numeric' name='crunch_algorithm[functions][#{number}][args][comparison]'>
-				<option>></option>
-				<option>=</option>
-				<option><</option>
-			</select>
-			<input class='datatype-responder numeric' name='crunch_algorithm[functions][#{number}][args][value]' style='width:75px' type='number'></input>
-			<select class='datatype-responder string' name='crunch_algorithm[functions][#{number}][args][comparison]'>
-				<option>equals</option>
-				<option>contains</option>
-				<option>contained in</option>
-			</select> 
-			<input class='datatype-responder string' name='crunch_algorithm[functions][#{number}][args][value]' style='width:175px' type='text'></input>
-		</div>
-		<br /><br />"
-		form_string
+    form_string = "
+      <select ng-model='func.args.dimension'>
+        <option>select</option>"
+        string_dimensions.each do |sd|  
+          form_string += "<option>#{sd[:name]}</option>"
+        end
+        numeric_dimensions.each do |nd|  
+          form_string += "<option>#{nd[:name]}</option>"
+        end
+      form_string += "
+      </select>
+      <select ng-model='func.args.comparison'>
+        <option>select</option>
+        <option>></option>
+        <option>=</option>
+        <option><</option>        
+        <option>equals</option>
+        <option>contains</option>
+        <option>contained by</option>
+      </select>
+      <input ng-model='func.args.value'/>"
+
+      form_string
 	end
 
 	def self.filter_rows_by(ary, args)
