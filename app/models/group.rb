@@ -47,8 +47,7 @@ module Group
         dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
       end 
       ary = remove_dimensions(ary, dimensions_to_remove)
-
-      all_values = ary.map{|row| row[dimension.to_sym]}.uniq
+      all_values = ary.map{|row| row[dimension]}.uniq
       row_groups = group_rows(ary, dimension, all_values)
       summed_array = []
       row_groups.each {|row_group| summed_array << sum_rows(row_group)}
@@ -71,15 +70,15 @@ module Group
         dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.include?(key.to_s)
       end
       ary = remove_dimensions(ary, dimensions_to_remove)
-
       grouping_array = []
       dimensions.each do |dim|
-        dim_values = ary.map{|row| row[dim.to_sym]}.uniq
+        dim_values = ary.map{|row| row[dim]}.uniq
         grouping_array << {dimension: dim, values: dim_values}
       end
 
       summed_array = []
       row_groups = two_dimension_group_rows(ary, grouping_array)
+      ap row_groups
       row_groups.each do |row_group| 
         summed_row = sum_rows(row_group)
         summed_array << summed_row unless summed_row == []
@@ -96,7 +95,7 @@ module Group
   def self.group_rows(rows, dimension, values)
     row_groups = Set.new
     values.each do |value|
-      row_groups << rows.select {|row| row[dimension.to_sym] == value}
+      row_groups << rows.select {|row| row[dimension] == value}
     end
     row_groups
   end
@@ -107,7 +106,7 @@ module Group
     inner_dimension = grouping_array[1][:dimension]
     grouping_array[0][:values].each do |outer_value|
       grouping_array[1][:values].each do |inner_value|
-        row_groups << rows.select {|row| row[outer_dimension.to_sym] == outer_value && row[inner_dimension.to_sym] == inner_value}
+        row_groups << rows.select {|row| row[outer_dimension] == outer_value && row[inner_dimension] == inner_value}
       end
     end
     row_groups
@@ -123,7 +122,7 @@ module Group
         end
       end
       sum.each {|k, v| sum[k] = v.round(2) if v.is_a?(Float)}
-      sum["cpc"] = (sum["cost"] / sum["clicks"].to_f).round(2)
+      # sum["cpc"] = (sum["cost"] / sum["clicks"].to_f).round(2)
       sum
     else
       []
