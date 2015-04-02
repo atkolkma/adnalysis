@@ -43,6 +43,7 @@ module Sort
 	end
 
 	def self.execute(ary, arguments)
+	    ap arguments
 	    ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
 	end
 
@@ -52,11 +53,11 @@ module Sort
 	    
 	    rules_hash.map do |rule|
 	      if rule["direction"] == "DESC"
-	        lower_array << x[rule["dimension"].to_sym]
-	        higher_array << y[rule["dimension"].to_sym]
+	        lower_array << x[rule["dimension"]]
+	        higher_array << y[rule["dimension"]]
 	      else
-	        higher_array << x[rule["dimension"].to_sym]
-	        lower_array << y[rule["dimension"].to_sym]
+	        higher_array << x[rule["dimension"]]
+	        lower_array << y[rule["dimension"]]
 	      end
 	    end
 	    higher_array <=> lower_array

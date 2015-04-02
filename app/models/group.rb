@@ -4,8 +4,8 @@ module Group
     "group by dimension"
   end
 
-  def execute(ary)
-
+  def self.execute(ary, dimensions)
+    group_by_dimensions(ary, dimensions)
   end
 
   def self.form(algorithm)
@@ -42,7 +42,6 @@ module Group
 
   
   def self.group_by_dimension(ary, dimension)
-    with_benchmark("group by dimension: ") do 
       dimensions_to_remove = []
       ary[0].each do |key, value|
         dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
@@ -53,9 +52,7 @@ module Group
       row_groups = group_rows(ary, dimension, all_values)
       summed_array = []
       row_groups.each {|row_group| summed_array << sum_rows(row_group)}
-      ap summed_array
       summed_array
-    end
   end
 
   def self.group_by_dimensions(ary, dimensions)  #for only two dimensions number_of_rows
@@ -96,5 +93,41 @@ module Group
     end
   end
 
+  def self.group_rows(rows, dimension, values)
+    row_groups = Set.new
+    values.each do |value|
+      row_groups << rows.select {|row| row[dimension.to_sym] == value}
+    end
+    row_groups
+  end
+
+  def self.two_dimension_group_rows(rows, grouping_array) #for only two dimensions now
+    row_groups = Set.new
+    outer_dimension = grouping_array[0][:dimension]
+    inner_dimension = grouping_array[1][:dimension]
+    grouping_array[0][:values].each do |outer_value|
+      grouping_array[1][:values].each do |inner_value|
+        row_groups << rows.select {|row| row[outer_dimension.to_sym] == outer_value && row[inner_dimension.to_sym] == inner_value}
+      end
+    end
+    row_groups
+  end
+
+  def self.sum_rows(row_group)
+    if row_group && row_group.length > 0  
+      sum = row_group[0]
+      row_group[1..-1].each do |row|
+        row.map do |k, v|
+          sum[k] += row[k].to_i if sum[k].is_a? Integer
+          sum[k] = sum[k].to_f + row[k].to_f if k == "cost"
+        end
+      end
+      sum.each {|k, v| sum[k] = v.round(2) if v.is_a?(Float)}
+      sum["cpc"] = (sum["cost"] / sum["clicks"].to_f).round(2)
+      sum
+    else
+      []
+    end
+  end
 
 end
