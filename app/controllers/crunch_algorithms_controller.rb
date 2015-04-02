@@ -1,7 +1,7 @@
 require 'json'
 
 class CrunchAlgorithmsController < ApplicationController
-  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions, :update_function_settings, :function_settings, :get_form, :get_forms]
+  before_action :set_crunch_algorithm, only: [:show, :edit, :update, :destroy, :edit_functions, :update_functions, :functions, :get_forms]
   protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
   # GET /crunch_algorithms
   # GET /crunch_algorithms.json
@@ -63,23 +63,17 @@ class CrunchAlgorithmsController < ApplicationController
     render json: @crunch_algorithm.function_forms.to_json
   end
 
-  def get_form
-    function_name = params[:func]
-    function = function_name.capitalize.constantize
-    render html: function.form(@crunch_algorithm).html_safe
-  end
-
   def delete_function
     function_index = params[:func_index]
     render json: {success: true}
   end
 
-  def function_settings
-    render json: @crunch_algorithm.function_settings.to_json
+  def functions
+    render json: @crunch_algorithm.functions.to_json
   end  
 
-  def update_function_settings
-    @crunch_algorithm.function_settings = JSON.parse(request.body.read)["functions"]
+  def update_functions
+    @crunch_algorithm.functions = JSON.parse(request.body.read)["functions"]
     @crunch_algorithm.save
   end
 
@@ -101,6 +95,6 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.permit(:name, :functions, :category, :report_id, :data_source_id, :number, :function_settings)
+      params.permit(:name, :category, :report_id, :data_source_id, :number, :functions)
     end
 end

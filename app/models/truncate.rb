@@ -8,8 +8,8 @@ module Truncate
     	args_from_form["cutoff"].to_i
 	end
 
-	def self.execute(ary, cutoff)
-	  ary[0..(cutoff-1)]
+	def self.execute(ary, args)
+	  ary[0..(args["cutoff"]-1)]
 	end
 
 	def self.hidden_form_input(function, index)

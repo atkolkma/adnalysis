@@ -12,7 +12,7 @@ module Group
     string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
 
     form_string = "
-    <div style='display:inline' ng-init='func.args = []'></div>
+    <div style='display:inline' ng-init='func.args == null ? func.args = [] : null'></div>
     <select ng-model='func.args[0]'>
       <option>select</option>"
       string_dimensions.each do |sd|  

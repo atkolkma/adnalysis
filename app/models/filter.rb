@@ -26,17 +26,6 @@ module Filter
 			}
 	end
 
-	def self.hidden_form_input(function, index)
-		ap function
-		hidden_input = "<input type='hidden' class='function-setting' name='crunch_algorithm[functions][#{index+1}][name]' value='Filter' />"
-	  unless function[:args].blank?
-	    hidden_input += "<input type='hidden' name='crunch_algorithm[functions][#{index+1}][args][dimension]' value='#{function[:args][:dimension]}' />"+
-	    "<input type='hidden' name='crunch_algorithm[functions][#{index+1}][args][comparison]' value='#{function[:args][:comparison]}' />"+
-	    "<input type='hidden' name='crunch_algorithm[functions][#{index+1}][args][value]' value='#{function[:args][:value]}' />"
-	  end
-		hidden_input
-	end
-
 	def self.form(algorithm)
 		all_dimensions = algorithm.dimensions
     numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "integer" || dim[:data_type] == "decimal"}
@@ -62,19 +51,20 @@ module Filter
         <option>contains</option>
         <option>contained by</option>
       </select>
-      <input ng-model='func.args.value'/>"
+      <input type='number' ng-model='func.args.value'/>"
 
       form_string
 	end
 
 	def self.filter_rows_by(ary, args)
-    if  args[:comparison] == '>'
+		ap args
+    if  args["comparison"] == '>'
       ary.keep_if do |row|
-        row[args[:dimension]] > args[:value].to_f
+        row[args["dimension"]] > args["value"].to_f
       end
-    elsif args[:comparison] == '<'
+    elsif args["comparison"] == '<'
       ary.keep_if do |row|
-        row[args[:dimension]] < args[:value].to_f
+        row[args["dimension"]] < args["value"].to_f
       end
     else
     end

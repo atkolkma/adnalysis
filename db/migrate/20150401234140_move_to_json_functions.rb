@@ -1,0 +1,7 @@
+class MoveToJsonFunctions < ActiveRecord::Migration
+  def change
+  	remove_column :crunch_algorithms, :function_settings
+  	remove_column :crunch_algorithms, :functions
+  	add_column :crunch_algorithms, :functions, :json, default: '{}'
+  end
+end

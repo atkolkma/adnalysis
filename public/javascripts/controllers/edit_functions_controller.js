@@ -5,7 +5,7 @@ controllers = angular.module('controllers',[]);
 
 controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeout', '$filter', '$sce', '$templateCache', function($scope, $http, $timeout, $filter, $sce, $templateCache) {
 	'use strict';
-	$scope.functions = {};
+	$scope.functions = [];
 
 	$scope.getForms = function() {
 		var partials = [];
@@ -18,7 +18,6 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 			for(var i in partials){
 		        $templateCache.put(partials[i].name, partials[i].content);
 		    }
-		    console.log($templateCache.get('Truncate'));
 		});
 
 		
@@ -26,7 +25,7 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 
 	$scope.updateFunctions = function() {
 		$http({
-			url: "update_function_settings.json",
+			url: "update_functions.json",
 			data: {functions: $scope.functions},
 			method: "PUT",
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -45,8 +44,6 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 	};
 
 	$scope.functionNames = ['Truncate', 'Filter', 'Sort', 'Group'];
-	$scope.dimensionNames = ['clicks', 'imps', 'conversions', 'cost'];
-	$scope.directionOptions = ['Ascending', 'Descending'];
 
 	$scope.commitFunction = function() {
 		console.log($scope.functions);
@@ -54,6 +51,7 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 	};
 
 	$scope.addFunction = function() {
+		console.log($scope.functions)
 		$scope.functions = $scope.functions.concat({});
 		$scope.editingFunctionIndex = $scope.functions.length -1;
 		$scope.editing = $scope.functions[$scope.editingFunctionIndex];
@@ -73,20 +71,11 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 		$scope.functions = $scope.functions.concat({name: "new", args: []});
 	};
 
-	$scope.getForm = function(funcName) {
-		$http({
-			url: "get_form?func="+funcName,
-			method: "GET"
-		}).success(function(data, status) {
-			$scope.functionSelectorHtml = data;
-		});
-	};
-
 	$scope.init = function() {
 		$scope.getForms();
 
 		$http({
-			url: "function_settings",
+			url: "functions",
 			method: "GET"
 		}).success(function(data, status) {
 			$scope.functions = data;
