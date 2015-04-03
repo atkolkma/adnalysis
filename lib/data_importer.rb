@@ -17,6 +17,8 @@ module DataImporter
 
   def self.store_data(data_set, file)
     mapping = construct_key_mapping(data_set.data_source)
+    p 'mapping'
+    ap mapping
     options = {file_encoding: 'iso-8859-1', key_mapping: mapping, remove_unmapped_keys: true}
 
     unformatted = SmarterCSV.process(file, options)
@@ -37,6 +39,7 @@ module DataImporter
   def self.construct_key_mapping(data_source)
     mapping = {}
     data_source.dimension_translations.each{|trans| mapping[trans[:original_name]] = trans[:translated_name]}
+    mapping
   end
 
   def self.run_validations(csv, data_source)
