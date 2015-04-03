@@ -95,6 +95,6 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.permit(:name, :category, :report_id, :data_source_id, :number, :functions)
+      params.require(:crunch_algorithm).permit(:name, :category, :report_id, :data_source_id, :number, :functions)
     end
 end

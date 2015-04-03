@@ -29,11 +29,14 @@ module Filter
 	def self.form(algorithm)
 		all_dimensions = algorithm.dimensions
     numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "integer" || dim[:data_type] == "decimal"}
+    numeric_dimensions_names = numeric_dimensions.map{|dim| dim[:name]}
     string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
+    string_dimensions_names = string_dimensions.map{|dim| dim[:name]}
 
     form_string = "
-      <select ng-model='func.args.dimension'>
-        <option>select</option>"
+      <span ng-init='setNumericDimensions(#{numeric_dimensions_names})'></span>
+      <span ng-init='setStringDimensions(#{string_dimensions_names})'></span>
+      <select ng-model='func.args.dimension'>"
         string_dimensions.each do |sd|  
           form_string += "<option>#{sd[:name]}</option>"
         end
@@ -42,17 +45,18 @@ module Filter
         end
       form_string += "
       </select>
-      <select ng-model='func.args.comparison'>
-        <option>select</option>
+      <select  ng-show='dimensionIsNumeric(func.args.dimension)' ng-model='func.args.comparison'>
         <option>></option>
         <option>=</option>
         <option><</option>        
+      </select>
+      <select ng-show='dimensionIsString(func.args.dimension)' ng-model='func.args.comparison'>
         <option>equals</option>
         <option>contains</option>
         <option>contained by</option>
       </select>
-      <input type='number' ng-model='func.args.value'/>"
-
+      <input ng-show='dimensionIsNumeric(func.args.dimension)' type='number' ng-model='func.args.value'/>
+      <input ng-show='dimensionIsString(func.args.dimension)' type='text' ng-model='func.args.value'/>"
       form_string
 	end
 
