@@ -45,7 +45,11 @@ module Filter
         end
       form_string += "
       </select>
-      <select  ng-show='dimensionIsNumeric(func.args.dimension)' ng-model='func.args.comparison'>
+      <select ng-model='func.args.modifier'>
+        <option selected='selected'>is</option>
+        <option>not</option>
+      </select>
+      <select ng-show='dimensionIsNumeric(func.args.dimension)' ng-model='func.args.comparison'>
         <option>></option>
         <option>=</option>
         <option><</option>        
@@ -61,16 +65,60 @@ module Filter
 	end
 
 	def self.filter_rows_by(ary, args)
-		ap args
-    if  args["comparison"] == '>'
-      ary.keep_if do |row|
-        row[args["dimension"]] > args["value"].to_f
-      end
-    elsif args["comparison"] == '<'
-      ary.keep_if do |row|
-        row[args["dimension"]] < args["value"].to_f
+    if args["modifier"] == "not"
+      if  args["cx`omparison"] == '>'
+        ary.delete_if do |row|
+          row[args["dimension"]] > args["value"].to_f
+        end
+      elsif args["comparison"] == '<'
+        ary.delete_if do |row|
+          row[args["dimension"]] < args["value"].to_f
+        end
+      elsif args["comparison"] == '='
+        ary.delete_if do |row|
+          row[args["dimension"]] == args["value"].to_f
+        end
+      elsif args["comparison"] == 'equals'
+        ary.delete_if do |row|
+          row[args["dimension"]] == args["value"]
+        end
+      elsif args["comparison"] == 'contains'
+        ary.delete_if do |row|
+          row[args["dimension"]].include? args["value"]
+        end
+      elsif args["comparison"] == 'contained by'
+        ary.delete_if do |row|
+          args["value"].include? row[args["dimension"]] 
+        end
+      else
       end
     else
+      if  args["comparison"] == '>'
+        ary.keep_if do |row|
+          row[args["dimension"]] > args["value"].to_f
+        end
+      elsif args["comparison"] == '<'
+        ary.keep_if do |row|
+          row[args["dimension"]] < args["value"].to_f
+        end
+      elsif args["comparison"] == '='
+        ary.keep_if do |row|
+          row[args["dimension"]] == args["value"].to_f
+        end
+      elsif args["comparison"] == 'equals'
+        ary.keep_if do |row|
+          row[args["dimension"]] == args["value"]
+        end
+      elsif args["comparison"] == 'contains'
+        ary.keep_if do |row|
+          row[args["dimension"]].include? args["value"]
+        end
+      elsif args["comparison"] == 'contained by'
+        ary.keep_if do |row|
+          args["value"].include? row[args["dimension"]] 
+        end
+      else
+      end
     end
 		ary
 	end
