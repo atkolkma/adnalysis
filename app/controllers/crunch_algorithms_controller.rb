@@ -17,12 +17,14 @@ class CrunchAlgorithmsController < ApplicationController
   # GET /crunch_algorithms/new
   def new
     @allowed_functions = CrunchAlgorithm::ALLOWED_FUNCTIONS
+    @allowed_types = CrunchAlgorithm::ALLOWED_CA_TYPES
     @crunch_algorithm = CrunchAlgorithm.new
     @crunch_algorithm.functions = []
   end
 
   # GET /crunch_algorithms/1/edit
   def edit
+    @allowed_types = CrunchAlgorithm::ALLOWED_CA_TYPES
   end
 
   # POST /crunch_algorithms
@@ -95,6 +97,7 @@ class CrunchAlgorithmsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def crunch_algorithm_params
-      params.permit(:name, :category, :report_id, :data_source_id, :number, :functions)
+      #use fetch instead of require to allow sending function updates without sending a :crunch_algorithm update
+      params.fetch(:crunch_algorithm, {}).permit(:name, :category, :report_id, :data_source_id, :number, :functions)
     end
 end

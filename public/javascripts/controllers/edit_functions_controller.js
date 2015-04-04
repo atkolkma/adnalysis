@@ -6,6 +6,39 @@ controllers = angular.module('controllers',[]);
 controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeout', '$filter', '$sce', '$templateCache', function($scope, $http, $timeout, $filter, $sce, $templateCache) {
 	'use strict';
 	$scope.functions = [];
+	$scope.numericDimensions = []; // populated by form with ng-init
+	$scope.stringDimensions = []; // populated by form with ng-init
+	$scope.setNumericDimensions = function(numDims) {
+		$scope.numericDimensions = numDims;
+	}	
+	$scope.setStringDimensions = function(stringDims) {
+		$scope.stringDimensions = stringDims;
+	}
+
+
+	$scope.dimensionIsNumeric = function(dimension) {
+		if (dimension == null) {
+			return false;
+		}
+		if ($scope.numericDimensions.indexOf(dimension) == -1) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
+	$scope.dimensionIsString = function(dimension) {
+		if (dimension == null) {
+			return false;
+		}
+		if ($scope.stringDimensions.indexOf(dimension) == -1) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
 
 	$scope.getForms = function() {
 		var partials = [];
@@ -46,12 +79,18 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 	$scope.functionNames = ['Truncate', 'Filter', 'Sort', 'Group'];
 
 	$scope.commitFunction = function() {
+<<<<<<< HEAD
 		console.log($scope.functions);
+=======
+>>>>>>> data-prep
 		$scope.editingFunctionIndex = -1;
 	};
 
 	$scope.addFunction = function() {
+<<<<<<< HEAD
 		console.log($scope.functions)
+=======
+>>>>>>> data-prep
 		$scope.functions = $scope.functions.concat({});
 		$scope.editingFunctionIndex = $scope.functions.length -1;
 		$scope.editing = $scope.functions[$scope.editingFunctionIndex];
@@ -59,8 +98,11 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 
 	$scope.updateEditing = function() {
 		$scope.functions[$scope.editingFunctionIndex] = $scope.editingFunction;
+<<<<<<< HEAD
 		console.log($scope.editingFunction);
 		console.log($scope.functions);
+=======
+>>>>>>> data-prep
 	};
 
 	$scope.isEditingFunction = function(index) {

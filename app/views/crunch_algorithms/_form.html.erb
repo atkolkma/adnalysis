@@ -16,6 +16,16 @@
     <%= f.text_field :name %>
   </div>
 
+  <%= f.label :application_type %><br>
+  <select required name="crunch_algorithm[category]">
+    <option></option>
+    
+    <% @allowed_types.each do |type| %>
+      <option <%= selected="selected" if type == @crunch_algorithm.category %> value="<%=type%>"><%=type%></option>
+    <% end %>
+  </select>
+  <br><br>
+
   <% if @crunch_algorithm.data_source %>
     <%= f.label :data_source %><br>
     <%= @crunch_algorithm.data_source.name %>
