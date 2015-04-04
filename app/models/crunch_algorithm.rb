@@ -6,6 +6,13 @@ class CrunchAlgorithm < ActiveRecord::Base
   has_many :sorts
   belongs_to :data_source
   serialize :dimensions
+
+  ALLOWED_CA_TYPES = [
+    "data preparation",
+    "natural language processing",
+    "statistical analysis",
+    "general purpose"
+  ]
  
 
   ALLOWED_FUNCTIONS = [
