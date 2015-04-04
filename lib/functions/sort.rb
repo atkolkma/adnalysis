@@ -2,10 +2,6 @@ require 'erb'
 
 module Sort
 
-	def name
-		"Sort by field"
-	end
-
 	def self.form(algorithm)
 		all_dimensions = algorithm.dimensions
 		numeric_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "integer" || dim[:data_type] == "decimal"}

@@ -90,6 +90,6 @@ class DataSourcesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_source_params
-      params.require(:data_source).permit(:name, dimension_translations: [])
+      params.require(:data_source).permit(:name, dimension_translations: [], calculated_dimensions: [])
     end
 end

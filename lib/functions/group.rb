@@ -1,9 +1,5 @@
 module Group
 
-  def name
-    "group by dimension"
-  end
-
   def self.execute(ary, dimensions)
     group_by_dimensions(ary, dimensions)
   end
@@ -30,16 +26,6 @@ module Group
 
     form_string
   end
-
-
-  def self.translate_form_args(args_from_form)
-    translated_args = [args_from_form["dimension1"]]
-    if args_from_form["dimension2"] && args_from_form["dimension2"] != "select"
-      translated_args << args_from_form["dimension2"]
-    end
-    translated_args
-  end
-
   
   def self.group_by_dimension(ary, dimension)
       dimensions_to_remove = []

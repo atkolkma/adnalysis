@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150404132233) do
+ActiveRecord::Schema.define(version: 20150404161459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 20150404132233) do
     t.string "name"
     t.string "dimension_translations"
     t.string "data_prep_algorithms"
+    t.json   "calculated_dimensions",  default: []
   end
 
   create_table "filters", force: :cascade do |t|
