@@ -7,12 +7,12 @@ controllers.controller("dimensionsEditorController", [ '$scope', '$http', '$time
 	'use strict';
 	
 	$scope.dimensions = [];
-	$scope.calculationNames = ['Arithmetic', 'Division'];
+	$scope.calculationNames = ['arithmetic', 'divide'];
 
 	$scope.getForms = function() {
 		var partials = [];
 		$http({
-			url: "calculated_dimensions_forms",
+			url: "calculations_forms",
 			method: "GET"
 		}).success(function(data, status) {
 			partials = data;
@@ -21,9 +21,7 @@ controllers.controller("dimensionsEditorController", [ '$scope', '$http', '$time
 		        $templateCache.put(partials[i].name, partials[i].content);
 		    }
 		});
-
-		
-	}; 
+		}; 
 
 	$scope.updateDimensions = function() {
 		$http({

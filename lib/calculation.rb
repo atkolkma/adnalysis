@@ -1,5 +1,5 @@
-require 'arithmetic'
-require 'divide'
+require 'calculations/arithmetic'
+require 'calculations/divide'
 
 module Calculation
 
@@ -15,6 +15,15 @@ module Calculation
 
 	def self.sanitize(statement)
 		statement
+	end
+
+	def self.forms
+		forms = []
+		ALLOWED_CALCULATIONS.map do |ac|
+			forms << {name: ac, content: ac.capitalize.constantize.form}
+			ac.capitalize.constantize.form
+		end
+		forms
 	end
 
 end

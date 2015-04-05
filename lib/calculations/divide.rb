@@ -10,9 +10,10 @@ module Divide
 	end
 
 	def self.form
-		"Numerator: <input ng-model='calculated_dimension.calculation.args.numerator' type='text' />
-		Denominator: <input ng-model='calculated_dimension.calculation.args.denominator' type='text' />
-		Zero Denominator Value: <input ng-model='calculated_dimension.calculation.args.zero_denominator_value' type='text' />"
+		"<span ng-init='dim.calculation.args  == null ? dim.calculation.args = {} : null'</span>
+		Numerator: <input ng-model='dim.calculation.args.numerator' type='text' />
+		Denominator: <input ng-model='dim.calculation.args.denominator' type='text' />
+		Zero Denominator Value: <input ng-model='dim.calculation.args.zero_denominator_value' type='text' />"
 	end
 
 end

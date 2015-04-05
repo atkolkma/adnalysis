@@ -51,8 +51,8 @@
   </div>
 
   <%= f.label :calculated_dimensions %> <br>
-  <% @data_source.calculated_dimensions.each_with_index do |cd| %>
-      <%=cd["name"]%> : <%=cd["calculation"]["name"]%> (<%=cd["calculation"]["args"]%>)<br>
+  <% @data_source.calculated_dimensions.each_with_index do |cd, i| %>
+      <%=i+1%>) <b><%=cd["name"]%> (<%=cd["data_type"]%>)</b>: <%=cd["calculation"]["name"]%> (<%=cd["calculation"]["args"]%>)<br>
   <%end%>
 <br>
   <%= link_to "Edit Calculated Dimensions", edit_calculated_dimensions_path%>

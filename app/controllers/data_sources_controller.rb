@@ -1,5 +1,6 @@
 class DataSourcesController < ApplicationController
   before_action :set_data_source, only: [:show, :edit, :update, :destroy, :edit_calculated_dimensions, :calculated_dimensions, :update_calculated_dimensions, :calculated_dimensions_forms]
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
 
   # GET /data_sources
   # GET /data_sources.json
@@ -52,14 +53,15 @@ class DataSourcesController < ApplicationController
   # PATCH/PUT /data_sources/1
   # PATCH/PUT /data_sources/1.json
   def update
-    dimension_translations = params[:dimension_translations]
-    parsed_dimension_translations = []
-    dimension_translations.each do |number, trans|
-      parsed_dimension_translations << {original_name: trans[:original_name].to_sym, translated_name: trans[:translated_name], data_type: trans[:data_type]} if trans[:original_name] != ""
+    if params[:dimension_translations]
+      dimension_translations = params[:dimension_translations]
+      parsed_dimension_translations = []
+      dimension_translations.each do |number, trans|
+        parsed_dimension_translations << {original_name: trans[:original_name].to_sym, translated_name: trans[:translated_name], data_type: trans[:data_type]} if trans[:original_name] != ""
+      end
+
+      @data_source.dimension_translations = parsed_dimension_translations
     end
-
-    @data_source.dimension_translations = parsed_dimension_translations
-
 
     respond_to do |format|
       if @data_source.update(data_source_params)
@@ -72,22 +74,16 @@ class DataSourcesController < ApplicationController
     end
   end
 
-  def edit_calculated_dimensions
-
-  end
-
   def calculations_forms
-    render json: @data_source.calculated_dimensions_forms.to_json
+    render json: Calculation.forms.to_json
   end
 
   def calculated_dimensions
-    p "cdjson"
-    ap @data_source.calculated_dimensions.to_json
     render json: @data_source.calculated_dimensions.to_json
   end  
 
   def update_calculated_dimensions
-    @data_source.calculated_dimensions = JSON.parse(request.body.read)["calculated_dimensions"]
+    @data_source.calculated_dimensions = JSON.parse(request.body.read)["dimensions"] || []
     @data_source.save
   end
 
@@ -112,6 +108,6 @@ class DataSourcesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_source_params
-      params.fetch(:data_source).permit(:name, dimension_translations: [], calculated_dimensions: [])
+      params.fetch(:data_source, {}).permit(:name, dimension_translations: [], calculated_dimensions: [])
     end
 end

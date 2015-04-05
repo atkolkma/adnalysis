@@ -34,10 +34,18 @@
           <span style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove' ng-click="deleteDimension($index)" aria-hidden="true"></span>
             {{$index+1}}) <span ng-show="!isEditingDimension($index)">{{dim.name}} : <b>{{dim.calculation.name}}</b> ({{dim.calculation.args}})</span>
             <span ng-show="isEditingDimension($index)">
-              <select style="display:inline" ng-model="dim.name">
-                <option ng-repeat="name in dimensionNames" value="{{name}}">{{name}}</option>
+              <input type="text" ng-model="dim.name"/>
+              <select ng-model="dim.data_type"/>
+                <option>decimal</option>
+                <option>integer</option>
+                <option>string</option>
+                <option>boolean</option>
               </select>
-              <div style="display:inline" ng-include="dim.name != null ? dim.name : null" ></div>
+              <select style="display:inline" ng-model="dim.calculation.name">
+                <option ng-repeat="name in calculationNames" value="{{name}}">{{name}}</option>
+              </select>
+
+              <div style="display:inline" ng-include="dim.calculation.name != null ? dim.calculation.name : null" ></div>
               <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-ok' ng-click="commitDimension()" aria-hidden="true"></span>
             </span>
           <br><br>

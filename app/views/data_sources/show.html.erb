@@ -11,8 +11,8 @@
 
 <h3>Calculated Dimensions:</h3>
 <% @data_source.calculated_dimensions.each do |cd| %>
-	<b><%= cd["name"] %></b>  => 
-	<b><%= cd["calculation"] %></b><br>
+	<b><%= cd["name"] %></b> (<%= cd["data_type"] %>) => 
+	<%= cd["calculation"] %><br>
 <% end %>
 
 <%= link_to 'Edit', edit_data_source_path(@data_source) %> |

@@ -7,7 +7,8 @@ module Arithmetic
 	end
 
 	def self.form
-		"<input ng-model='calculated_dimension.calculation.args.expression' type='text' />"
+		"<span ng-init='dim.calculation.args == null ? dim.calculation.args = {} : null'</span>
+		<input ng-model='dim.calculation.args.expression' type='text' />"
 	end
 
 end
