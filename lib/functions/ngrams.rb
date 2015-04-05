@@ -1,4 +1,4 @@
-class Calculation
+class Ngrams
 
 	def self.high_frequency_n_tuples(n, hash_table)
 		with_benchmark("ntuple calculation time: ") do 

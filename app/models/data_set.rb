@@ -10,4 +10,12 @@ class DataSet < ActiveRecord::Base
     self.stored_data
   end
 
+  def add_calculated_dimensions(ary)
+  	ary.map do |row|
+  		self.calculated_dimensions.each do |cd|
+  			row[cd["name"]] = cd["calculation"]["name"].constantize.execute(row, cd["calculation"]["args"])
+  		end
+  	end
+  end
+
 end
