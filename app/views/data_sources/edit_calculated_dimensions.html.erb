@@ -1,0 +1,56 @@
+<% content_for :head do %>
+  <script src="/javascripts/controllers/edit_calculated_dimensions_controller.js"></script>
+<% end %>
+
+<p id="notice"><%= notice %></p>
+<%= form_for(@data_source) do |f| %>
+  <% if @data_source.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@data_source.errors.count, "error") %> prohibited this data_source from being saved:</h2>
+
+      <ul>
+      <% @data_source.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h1>Edit Calculated Dimensions for <br><%=@data_source.name%></h1>
+<br>
+  <h4>Stored Dimensions</h4>
+
+  <% @data_source.dimension_translations.each do |dt| %>
+    <b><%= dt[:translated_name ] %></b> (<%= dt[:data_type] %>) <br>  
+  <%end%>
+  <br>
+
+  <h4>Calculated Dimensions</h4>
+
+  <div ng-app="dimensionsEditor">
+    <div class="dimension-row">
+      <div ng-controller="dimensionsEditorController">
+        <div ng-repeat="dim in dimensions" class="dimension-row">
+          <span style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove' ng-click="deleteDimension($index)" aria-hidden="true"></span>
+            {{$index+1}}) <span ng-show="!isEditingDimension($index)">{{dim.name}} : {{dim.args}}</span>
+            <span ng-show="isEditingDimension($index)">
+              <select style="display:inline" ng-model="dim.name">
+                <option ng-repeat="name in dimensionNames" value="{{name}}">{{name}}</option>
+              </select>
+              <div style="display:inline" ng-include="dim.name != null ? dim.name : null" ></div>
+              <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-ok' ng-click="commitDimension()" aria-hidden="true"></span>
+            </span>
+          <br><br>
+        </div>
+        <span style="weight:800; color:green; cursor: pointer; cursor: hand" class='glyphicon glyphicon-plus' ng-click="addDimension($index)" aria-hidden="true"></span> <br><br> 
+        <button ng-click="updateDimensions()">Update Dimensions</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+

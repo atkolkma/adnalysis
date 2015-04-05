@@ -65,10 +65,10 @@ class CrunchAlgorithmsController < ApplicationController
     render json: @crunch_algorithm.function_forms.to_json
   end
 
-  def delete_function
-    function_index = params[:func_index]
-    render json: {success: true}
-  end
+  # def delete_function
+  #   function_index = params[:func_index]
+  #   render json: {success: true}
+  # end
 
   def functions
     render json: @crunch_algorithm.functions.to_json

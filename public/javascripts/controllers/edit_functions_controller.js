@@ -79,18 +79,10 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 	$scope.functionNames = ['Truncate', 'Filter', 'Sort', 'Group'];
 
 	$scope.commitFunction = function() {
-<<<<<<< HEAD
-		console.log($scope.functions);
-=======
->>>>>>> data-prep
 		$scope.editingFunctionIndex = -1;
 	};
 
 	$scope.addFunction = function() {
-<<<<<<< HEAD
-		console.log($scope.functions)
-=======
->>>>>>> data-prep
 		$scope.functions = $scope.functions.concat({});
 		$scope.editingFunctionIndex = $scope.functions.length -1;
 		$scope.editing = $scope.functions[$scope.editingFunctionIndex];
@@ -98,11 +90,6 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 
 	$scope.updateEditing = function() {
 		$scope.functions[$scope.editingFunctionIndex] = $scope.editingFunction;
-<<<<<<< HEAD
-		console.log($scope.editingFunction);
-		console.log($scope.functions);
-=======
->>>>>>> data-prep
 	};
 
 	$scope.isEditingFunction = function(index) {

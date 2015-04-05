@@ -1,4 +1,12 @@
+require 'arithmetic'
+require 'divide'
+
 module Calculation
+
+	ALLOWED_CALCULATIONS = [
+		"arithmetic",
+		"divide"
+	]
 
 	def self.evaluate(row_values, statement)
 		statement = sanitize(statement)

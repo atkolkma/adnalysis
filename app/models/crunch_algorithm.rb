@@ -1,9 +1,11 @@
 require 'json'
+require 'functions/truncate'
+require 'functions/sort'
+require 'functions/group'
+require 'functions/filter'
 
 class CrunchAlgorithm < ActiveRecord::Base
 	has_many :reports
-  has_many :truncates
-  has_many :sorts
   belongs_to :data_source
   serialize :dimensions
 

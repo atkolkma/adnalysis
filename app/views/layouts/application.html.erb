@@ -4,8 +4,8 @@
   <title>Adnalysis</title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
-  <script src="/javascripts/controllers/edit_functions_controller.js"></script>
   <%= csrf_meta_tags %>
+  <%= yield :head %>
 
 </head>
 <body>

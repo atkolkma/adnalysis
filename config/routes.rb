@@ -15,6 +15,12 @@ Rails.application.routes.draw do
   get 'crunch_algorithms/:id/get_forms', to: 'crunch_algorithms#get_forms'
   get 'crunch_algorithms/:id/functions', to: 'crunch_algorithms#functions'
   put 'crunch_algorithms/:id/update_functions', to: 'crunch_algorithms#update_functions'
+
+  get 'data_sources/:id/calculations_forms', to: 'data_sources#calculations_forms'
+  get 'data_sources/:id/calculations', to: 'data_sources#calculations'
+  put 'data_sources/:id/update_calculated_dimensions', to: 'data_sources#update_calculated_dimensions'
+  get 'data_sources/:id/edit_calculated_dimensions', to: 'data_sources#edit_calculated_dimensions', as: 'edit_calculated_dimensions' 
+  
   get 'crunch_algorithms/:id/delete_function', to: 'crunch_algorithms#delete_function'
   get 'reports/:id/crunch', to: 'reports#crunch', as: 'crunch' 
   get 'crunch_algorithms/:id/edit_functions', to: 'crunch_algorithms#edit_functions', as: 'edit_functions' 

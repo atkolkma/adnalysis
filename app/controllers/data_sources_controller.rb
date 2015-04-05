@@ -1,5 +1,5 @@
 class DataSourcesController < ApplicationController
-  before_action :set_data_source, only: [:show, :edit, :update, :destroy]
+  before_action :set_data_source, only: [:show, :edit, :update, :destroy, :edit_calculated_dimensions, :calculated_dimensions, :update_calculated_dimensions, :calculated_dimensions_forms]
 
   # GET /data_sources
   # GET /data_sources.json
@@ -72,6 +72,26 @@ class DataSourcesController < ApplicationController
     end
   end
 
+  def edit_calculated_dimensions
+
+  end
+
+  def calculations_forms
+    render json: @data_source.calculated_dimensions_forms.to_json
+  end
+
+  def calculated_dimensions
+    render json: @data_source.calculated_dimensions.to_json
+  end  
+
+  def update_calculated_dimensions
+    @data_source.calculated_dimensions = JSON.parse(request.body.read)["calculated_dimensions"]
+    @data_source.save
+  end
+
+  def edit_calculated_dimensions
+  end
+
   # DELETE /data_sources/1
   # DELETE /data_sources/1.json
   def destroy
@@ -90,6 +110,6 @@ class DataSourcesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def data_source_params
-      params.require(:data_source).permit(:name, dimension_translations: [], calculated_dimensions: [])
+      params.fetch(:data_source).permit(:name, dimension_translations: [], calculated_dimensions: [])
     end
 end

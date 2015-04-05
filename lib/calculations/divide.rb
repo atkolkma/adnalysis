@@ -1,5 +1,3 @@
-require 'calculation'
-
 module Divide
 
 	def self.execute(row_values, args)
@@ -12,7 +10,9 @@ module Divide
 	end
 
 	def self.form
-
+		"Numerator: <input ng-model='calculated_dimension.calculation.args.numerator' type='text' />
+		Denominator: <input ng-model='calculated_dimension.calculation.args.denominator' type='text' />
+		Zero Denominator Value: <input ng-model='calculated_dimension.calculation.args.zero_denominator_value' type='text' />"
 	end
 
 end

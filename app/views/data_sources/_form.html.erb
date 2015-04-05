@@ -51,11 +51,13 @@
   </div>
 
   <%= f.label :calculated_dimensions %> <br>
-  <% @data_source.calculated_dimensions.each_with_index do |cd, i| %>
-      <input style="width=1000px" name="data_source[calculated_dimensions][<%=i%>]" value="<%=@data_source.calculated_dimensions%>" type="text"><br>
+  <% @data_source.calculated_dimensions.each_with_index do |cd| %>
+      <%=cd["name"]%> : <%=cd["calculation"]["name"]%> (<%=cd["calculation"]["args"]%>)<br>
   <%end%>
+<br>
+  <%= link_to "Edit Calculated Dimensions", edit_calculated_dimensions_path%>
 
-
+<br><br>
   <div class="actions">
     <%= f.submit %>
   </div>
