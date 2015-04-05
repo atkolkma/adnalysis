@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   put 'crunch_algorithms/:id/update_functions', to: 'crunch_algorithms#update_functions'
 
   get 'data_sources/:id/calculations_forms', to: 'data_sources#calculations_forms'
-  get 'data_sources/:id/calculations', to: 'data_sources#calculations'
+  get 'data_sources/:id/calculated_dimensions', to: 'data_sources#calculated_dimensions'
   put 'data_sources/:id/update_calculated_dimensions', to: 'data_sources#update_calculated_dimensions'
   get 'data_sources/:id/edit_calculated_dimensions', to: 'data_sources#edit_calculated_dimensions', as: 'edit_calculated_dimensions' 
   

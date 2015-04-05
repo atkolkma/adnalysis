@@ -81,6 +81,8 @@ class DataSourcesController < ApplicationController
   end
 
   def calculated_dimensions
+    p "cdjson"
+    ap @data_source.calculated_dimensions.to_json
     render json: @data_source.calculated_dimensions.to_json
   end  
 

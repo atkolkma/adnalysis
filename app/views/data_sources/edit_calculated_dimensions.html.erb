@@ -32,7 +32,7 @@
       <div ng-controller="dimensionsEditorController">
         <div ng-repeat="dim in dimensions" class="dimension-row">
           <span style="weight:800; color:red; cursor: pointer; cursor: hand" class='glyphicon glyphicon-remove' ng-click="deleteDimension($index)" aria-hidden="true"></span>
-            {{$index+1}}) <span ng-show="!isEditingDimension($index)">{{dim.name}} : {{dim.args}}</span>
+            {{$index+1}}) <span ng-show="!isEditingDimension($index)">{{dim.name}} : <b>{{dim.calculation.name}}</b> ({{dim.calculation.args}})</span>
             <span ng-show="isEditingDimension($index)">
               <select style="display:inline" ng-model="dim.name">
                 <option ng-repeat="name in dimensionNames" value="{{name}}">{{name}}</option>
