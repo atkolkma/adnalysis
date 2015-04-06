@@ -24,7 +24,8 @@ class CrunchAlgorithm < ActiveRecord::Base
   ]
 
   def set_dimensions
-    self.dimensions = self.data_source.dimension_translations.map {|dt| {name: dt[:translated_name], data_type: dt[:data_type]}}
+    self.dimensions = self.data_source.dimension_translations.map {|dt| {name: dt[:translated_name], data_type: dt[:data_type], retrieve_from: "datastore"}}
+    self.dimensions += self.data_source.calculated_dimensions.map {|cd| {name: cd["name"], data_type: cd["data_type"], retrieve_from: "calculation", calculation: cd["calculation"]}}
     self.save
   end
 

@@ -12,7 +12,9 @@ module DataImporter
   end
 
   def self.generate_dimensions(data_set)
-    data_set.dimensions = data_set.data_source.dimension_translations.map {|dt| {name: dt[:translated_name], data_type: dt[:data_type]}}
+    data_set.dimensions = data_set.data_source.dimension_translations.map {|dt| {name: dt[:translated_name], data_type: dt[:data_type], retrieve_from: "datastore"}}
+    data_set.dimensions += data_set.data_source.calculated_dimensions.map {|cd| {name: cd["name"], data_type: cd["data_type"], retrieve_from: "calculation", calculation: cd["calculation"]}}
+    
   end
 
   def self.store_data(data_set, file)
