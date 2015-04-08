@@ -1,8 +1,17 @@
+require 'calculation'
 module ReportCruncher
 
-  def self.crunch(ary, functions)
+  def self.crunch(ary, functions, dimensions)
     functions.each do |f|
-      ary = f["name"].constantize.send('execute', ary, f["args"])
+      ary = f["name"].constantize.send('execute', ary, f["args"], dimensions)
+    end
+    ary
+  end
+
+  def self.add_calculated_dimension(ary, dimension)
+    ary.each do |row|
+      calculated_field = {dimension[:name] => dimension[:calculation]["name"].capitalize.constantize.execute(row, dimension[:calculation]["args"])}
+      row.merge!(calculated_field)
     end
     ary
   end
@@ -98,7 +107,6 @@ module ReportCruncher
       row_groups = group_rows(ary, dimension, all_values)
       summed_array = []
       row_groups.each {|row_group| summed_array << sum_rows(row_group)}
-      ap summed_array
       summed_array
     end
   end

@@ -38,8 +38,7 @@ module Sort
 			form_string
 	end
 
-	def self.execute(ary, arguments)
-	    ap arguments
+	def self.execute(ary, arguments, dimensions)
 	    ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
 	end
 

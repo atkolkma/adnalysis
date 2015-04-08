@@ -1,7 +1,14 @@
 module Group
 
-  def self.execute(ary, dimensions)
-    group_by_dimensions(ary, dimensions)
+  def self.execute(ary, dimensions, dataset_dimensions)
+    calculated_dimensions = dataset_dimensions.select{|dd| dd["retrieve_from_from"] == "calculation"}
+    
+    dimensions.each do |dim|
+      if calculated_dimensions.map{|dd| dd["name"]}.include? dim["name"]
+        ary = ReportCruncher.add_calculated_dimension(ary, dimension)
+      end
+    end
+    group_by_dimensions(ary, dimensions, dataset_dimensions)
   end
 
   def self.form(algorithm)
@@ -27,7 +34,7 @@ module Group
     form_string
   end
   
-  def self.group_by_dimension(ary, dimension)
+  def self.group_by_dimension(ary, dimension, dataset_dimensions)
       dimensions_to_remove = []
       ary[0].each do |key, value|
         dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
@@ -40,11 +47,11 @@ module Group
       summed_array
   end
 
-  def self.group_by_dimensions(ary, dimensions)  #for only two dimensions number_of_rows
+  def self.group_by_dimensions(ary, dimensions, dataset_dimensions)  #for only two dimensions number_of_rows
     if dimensions.length == 2
-      group_by_two_dimensions(ary, dimensions)
+      group_by_two_dimensions(ary, dimensions, dataset_dimensions)
     elsif dimensions.length == 1
-      group_by_dimension(ary, dimensions[0])
+      group_by_dimension(ary, dimensions[0], dataset_dimensions)
     else
       raise "Invalid arguments, must include one or two dimensions in array form"
     end
@@ -64,7 +71,6 @@ module Group
 
       summed_array = []
       row_groups = two_dimension_group_rows(ary, grouping_array)
-      ap row_groups
       row_groups.each do |row_group| 
         summed_row = sum_rows(row_group)
         summed_array << summed_row unless summed_row == []

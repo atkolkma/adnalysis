@@ -1,7 +1,15 @@
 module Filter
 
-	def self.execute(ary, args)
-		filter_rows_by(ary, args)
+	def self.execute(ary, args, dimensions)
+    calculated_dimensions = dimensions.select{|dd| dd[:retrieve_from] == "calculation"}
+    
+    calculated_dimensions.each do |dim|
+      if dim[:name] == args["dimension"]
+        ary = ReportCruncher.add_calculated_dimension(ary, dim)
+      end
+    end
+    
+		filter_rows_by(ary, args, dimensions)
 	end
 
 	def self.form(algorithm)
@@ -42,7 +50,12 @@ module Filter
       form_string
 	end
 
-	def self.filter_rows_by(ary, args)
+	def self.filter_rows_by(ary, args, dimensions)
+    if args["dimension"]
+
+    end
+
+
     if args["modifier"] == "not"
       if  args["cx`omparison"] == '>'
         ary.delete_if do |row|
@@ -73,23 +86,23 @@ module Filter
     else
       if  args["comparison"] == '>'
         ary.keep_if do |row|
-          row[args["dimension"]] > args["value"].to_f
+          row[args["dimension"]] && (row[args["dimension"]] > args["value"].to_f)
         end
       elsif args["comparison"] == '<'
         ary.keep_if do |row|
-          row[args["dimension"]] < args["value"].to_f
+          row[args["dimension"]] && (row[args["dimension"]] < args["value"].to_f)
         end
       elsif args["comparison"] == '='
         ary.keep_if do |row|
-          row[args["dimension"]] == args["value"].to_f
+          row[args["dimension"]] && (row[args["dimension"]] == args["value"].to_f)
         end
       elsif args["comparison"] == 'equals'
         ary.keep_if do |row|
-          row[args["dimension"]] == args["value"]
+          row[args["dimension"]] && (row[args["dimension"]] == args["value"])
         end
       elsif args["comparison"] == 'contains'
         ary.keep_if do |row|
-          row[args["dimension"]].include? args["value"]
+          row[args["dimension"]] && (row[args["dimension"]].include? args["value"])
         end
       elsif args["comparison"] == 'contained by'
         ary.keep_if do |row|

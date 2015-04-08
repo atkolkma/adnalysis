@@ -6,7 +6,11 @@ module Divide
 		zero_denominator_value = Calculation.evaluate(row_values, args["zero_denominator_value"])
 		
 		return zero_denominator_value if denominator == 0
-		numerator/denominator
+		if (numerator.is_a? Numeric) && (denominator.is_a? Numeric)
+			numerator/denominator
+		else
+			0
+		end
 	end
 
 	def self.form

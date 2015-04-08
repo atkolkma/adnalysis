@@ -1,6 +1,6 @@
 module Truncate
 
-	def self.execute(ary, args)
+	def self.execute(ary, args, dimensions)
 	  ary[0..(args["cutoff"]-1)]
 	end
 

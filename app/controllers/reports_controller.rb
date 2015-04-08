@@ -4,7 +4,7 @@ class ReportsController < ApplicationController
 
   def crunch
     @report.load_data
-    @report.report_preview_rows = ReportCruncher.crunch(@report.data_set.data, @report.crunch_algorithm.functions) #ReportCruncher.truncate(ReportCruncher.sort_by_dim(ReportCruncher.group_by_dimensions(ReportCruncher.filter_rows(@report.data, 0), ["adgroup", "match_type"]), @sort_rules),100)
+    @report.report_preview_rows = ReportCruncher.crunch(@report.data_set.data, @report.crunch_algorithm.functions, @report.data_set.dimensions)
     @report.save
   end
 
