@@ -7,7 +7,7 @@ module Divide
 		
 		return zero_denominator_value if denominator == 0
 		if (numerator.is_a? Numeric) && (denominator.is_a? Numeric)
-			numerator/denominator
+			(numerator/denominator).round(2)
 		else
 			0
 		end

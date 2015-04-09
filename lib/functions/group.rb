@@ -8,7 +8,9 @@ module Group
         ary = ReportCruncher.add_calculated_dimension(ary, dimension)
       end
     end
+
     group_by_dimensions(ary, dimensions, dataset_dimensions)
+    
   end
 
   def self.form(algorithm)

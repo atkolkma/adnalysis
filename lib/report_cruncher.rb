@@ -2,9 +2,16 @@ require 'calculation'
 module ReportCruncher
 
   def self.crunch(ary, functions, dimensions)
+    calculated_dimensions = dimensions.select{|dd| dd[:retrieve_from] == "calculation"}
+    
     functions.each do |f|
       ary = f["name"].constantize.send('execute', ary, f["args"], dimensions)
     end
+    
+    calculated_dimensions.each do |dim|
+      ary = ReportCruncher.add_calculated_dimension(ary, dim)
+    end
+
     ary
   end
 
