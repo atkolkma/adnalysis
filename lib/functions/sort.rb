@@ -39,6 +39,14 @@ module Sort
 	end
 
 	def self.execute(ary, arguments, dimensions)
+	    calculated_dimensions = dimensions.select{|dd| dd[:retrieve_from] == "calculation"}
+		
+		calculated_dimensions.each do |dim|
+			if arguments.map{|arg| arg["dimension"]}.include? dim[:name]
+				ary = ReportCruncher.add_calculated_dimension(ary, dim)
+			end
+		end
+
 	    ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
 	end
 
