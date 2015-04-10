@@ -3,9 +3,9 @@ module Ngrams
 	def self.execute(ary, args, dimensions)
     calculated_dimensions = dimensions.select{|dd| dd[:retrieve_from] == "calculation"}
     
-    if args["order"] == "ordered"
+    if args["word_order"] == "ordered"
       ordered_ngrams(ary, args, dimensions)
-    elsif args["order"] == "unordered"
+    elsif args["word_order"] == "unordered"
       unordered_ngrams(ary, args, dimensions)
     else
       ary
@@ -33,12 +33,15 @@ module Ngrams
 	end
 
 	def self.ordered_ngrams(ary, args, dimensions)
+    numeric_dimensions = dimensions.select{|dim| (dim[:data_type] == "decimal" || dim[:data_type] == "integer") && dim[:retrieve_from] == "datastore"}
+    # remove any dimensions that don't appear in the ary
+    numeric_dimensions.keep_if{|nd| ary[0].keys.include? nd[:name] }
     summed_ngrams = {}
-    
+
     ary.each do |row|
       ngrams = ngrams_from_row(row, args["string_dimension"], args["n"])
       ngrams.each do |ngram|
-        sum_ngram_values(summed_ngrams, ngram, row, args[:numeric_dimensions])
+        sum_ngram_values(summed_ngrams, ngram, row, numeric_dimensions)
       end
     end
 
@@ -46,14 +49,15 @@ module Ngrams
   end
 
   def self.sum_ngram_values(totals_hash, ngram, row, dimensions)
+
     if totals_hash[ngram]
       dimensions.each do |dim|
-        totals_hash[ngram.to_sym][dim] += normalize_numeric_field(row[dim])
+        totals_hash[ngram][dim[:name]] += row[dim[:name]]
       end
     else
-      totals_hash[ngram.to_sym] = {}
+      totals_hash[ngram] = {}
       dimensions.each do |dim|
-        totals_hash[ngram.to_sym][dim] = normalize_numeric_field(row[dim])
+        totals_hash[ngram][dim[:name]] = row[dim[:name]]
       end
     end
   end
