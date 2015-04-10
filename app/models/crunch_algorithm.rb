@@ -3,6 +3,7 @@ require 'functions/truncate'
 require 'functions/sort'
 require 'functions/group'
 require 'functions/filter'
+require 'functions/ngrams'
 
 class CrunchAlgorithm < ActiveRecord::Base
 	has_many :reports
@@ -20,7 +21,8 @@ class CrunchAlgorithm < ActiveRecord::Base
     "Truncate",
     "Sort",
     "Filter",
-    "Group"
+    "Group",
+    "Ngrams"
   ]
 
   def set_dimensions

@@ -76,7 +76,7 @@ controllers.controller("functionsEditorController", [ '$scope', '$http', '$timeo
 		$scope.functions[$scope.editingFunctionIndex] = updated;
 	};
 
-	$scope.functionNames = ['Truncate', 'Filter', 'Sort', 'Group'];
+	$scope.functionNames = ['Truncate', 'Filter', 'Sort', 'Group', 'Ngrams'];
 
 	$scope.commitFunction = function() {
 		$scope.editingFunctionIndex = -1;

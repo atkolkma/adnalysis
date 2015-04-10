@@ -23,19 +23,19 @@ module ReportCruncher
     ary
   end
 
-  def self.filter_rows_by(ary, args)
-    if args["comparison"] == "greater_than"
-      ary.keep_if do |row|
-        row[args["dimension"]] > args["value"]
-      end
-    elsif args["comparison"] == less_than
-      ary.keep_if do |row|
-        row[args["dimension"]] < args["value"]
-      end
-    else
-      ary
-    end
-  end
+  # def self.filter_rows_by(ary, args)
+  #   if args["comparison"] == "greater_than"
+  #     ary.keep_if do |row|
+  #       row[args["dimension"]] > args["value"]
+  #     end
+  #   elsif args["comparison"] == less_than
+  #     ary.keep_if do |row|
+  #       row[args["dimension"]] < args["value"]
+  #     end
+  #   else
+  #     ary
+  #   end
+  # end
 
   def self.output_part_numbers(ary, args)
     ary = only_part_number_rows(ary, args[:string_dimension])
@@ -73,123 +73,123 @@ module ReportCruncher
     Math.log10(number).to_i + 1
   end
 
-  ### must pass hash within array
-  def self.sort_by_dim(ary, arguments)
-    ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
-  end
+  # ### must pass hash within array
+  # def self.sort_by_dim(ary, arguments)
+  #   ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
+  # end
 
-  @@sorting_arrays = lambda do |x,y,rules_hash|
-    higher_array = []
-    lower_array = []
+  # @@sorting_arrays = lambda do |x,y,rules_hash|
+  #   higher_array = []
+  #   lower_array = []
     
-    rules_hash.map do |rule|
-      if rule[:direction] == "desc"
-        lower_array << x[rule[:dimension].to_sym]
-        higher_array << y[rule[:dimension].to_sym]
-      else
-        higher_array << x[rule[:dimension].to_sym]
-        lower_array << y[rule[:dimension].to_sym]
-      end
-    end
-    higher_array <=> lower_array
-  end
+  #   rules_hash.map do |rule|
+  #     if rule[:direction] == "desc"
+  #       lower_array << x[rule[:dimension].to_sym]
+  #       higher_array << y[rule[:dimension].to_sym]
+  #     else
+  #       higher_array << x[rule[:dimension].to_sym]
+  #       lower_array << y[rule[:dimension].to_sym]
+  #     end
+  #   end
+  #   higher_array <=> lower_array
+  # end
 
-  def self.truncate(ary, number_of_rows)
-    ary[0..number_of_rows]
-  end
+  # def self.truncate(ary, number_of_rows)
+  #   ary[0..number_of_rows]
+  # end
 
-  def self.headers(ary)
-    ary[0].keys.map{|key| key.to_s.gsub("_", " ").titleize}
-  end
+  # def self.headers(ary)
+  #   ary[0].keys.map{|key| key.to_s.gsub("_", " ").titleize}
+  # end
 
-  def self.group_by_dimension(ary, dimension)
-    with_benchmark("group by dimension: ") do 
-      dimensions_to_remove = []
-      ary[0].each do |key, value|
-        dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
-      end 
-      ary = remove_dimensions(ary, dimensions_to_remove)
+  # def self.group_by_dimension(ary, dimension)
+  #   with_benchmark("group by dimension: ") do 
+  #     dimensions_to_remove = []
+  #     ary[0].each do |key, value|
+  #       dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
+  #     end 
+  #     ary = remove_dimensions(ary, dimensions_to_remove)
 
-      all_values = ary.map{|row| row[dimension.to_sym]}.uniq
-      row_groups = group_rows(ary, dimension, all_values)
-      summed_array = []
-      row_groups.each {|row_group| summed_array << sum_rows(row_group)}
-      summed_array
-    end
-  end
+  #     all_values = ary.map{|row| row[dimension.to_sym]}.uniq
+  #     row_groups = group_rows(ary, dimension, all_values)
+  #     summed_array = []
+  #     row_groups.each {|row_group| summed_array << sum_rows(row_group)}
+  #     summed_array
+  #   end
+  # end
 
-  def self.group_by_dimensions(ary, dimensions)  #for only two dimensions number_of_rows
-    if dimensions.length == 2
-      group_by_two_dimensions(ary, dimensions)
-    elsif dimensions.length == 1
-      group_by_dimension(ary, dimensions[0])
-    else
-      raise "Invalid arguments, must include one or two dimensions in array form"
-    end
-  end
+  # def self.group_by_dimensions(ary, dimensions)  #for only two dimensions number_of_rows
+  #   if dimensions.length == 2
+  #     group_by_two_dimensions(ary, dimensions)
+  #   elsif dimensions.length == 1
+  #     group_by_dimension(ary, dimensions[0])
+  #   else
+  #     raise "Invalid arguments, must include one or two dimensions in array form"
+  #   end
+  # end
 
-  def self.group_by_two_dimensions(ary, dimensions)
-     dimensions_to_remove = []
-      ary[0].each do |key, value|
-        dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.include?(key.to_s)
-      end
-      ary = remove_dimensions(ary, dimensions_to_remove)
+  # def self.group_by_two_dimensions(ary, dimensions)
+  #    dimensions_to_remove = []
+  #     ary[0].each do |key, value|
+  #       dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.include?(key.to_s)
+  #     end
+  #     ary = remove_dimensions(ary, dimensions_to_remove)
 
-      grouping_array = []
-      dimensions.each do |dim|
-        dim_values = ary.map{|row| row[dim.to_sym]}.uniq
-        grouping_array << {dimension: dim, values: dim_values}
-      end
+  #     grouping_array = []
+  #     dimensions.each do |dim|
+  #       dim_values = ary.map{|row| row[dim.to_sym]}.uniq
+  #       grouping_array << {dimension: dim, values: dim_values}
+  #     end
 
-      summed_array = []
-      row_groups = two_dimension_group_rows(ary, grouping_array)
-      row_groups.each do |row_group| 
-        summed_row = sum_rows(row_group)
-        summed_array << summed_row unless summed_row == []
-      end
-      summed_array
-  end
+  #     summed_array = []
+  #     row_groups = two_dimension_group_rows(ary, grouping_array)
+  #     row_groups.each do |row_group| 
+  #       summed_row = sum_rows(row_group)
+  #       summed_array << summed_row unless summed_row == []
+  #     end
+  #     summed_array
+  # end
 
-  def self.remove_dimensions(ary, dimensions=[])
-    ary.each do |row|
-      row.delete_if {|k,v| dimensions.include? k}
-    end
-  end
+  # def self.remove_dimensions(ary, dimensions=[])
+  #   ary.each do |row|
+  #     row.delete_if {|k,v| dimensions.include? k}
+  #   end
+  # end
 
-  def self.high_frequency_n_tuples(ary, args)
-    with_benchmark("ntuple calculation time: ") do
-      summed_ngrams = {}
-      ary.each do |row|
-        ngrams = ngrams_from_row(row, args[:string_dimension], args[:n])
-        ngrams.each do |ngram|
-          sum_ngram_values(summed_ngrams, ngram, row, args[:numeric_dimensions])
-        end
-      end
-      summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum) } 
-      # summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum).merge({roi: (sum["cost"] == 0 ? 0 : (sum["total_conv_value"] / sum["cost"])) }) } 
-    end
-  end
+  # def self.high_frequency_n_tuples(ary, args)
+  #   with_benchmark("ntuple calculation time: ") do
+  #     summed_ngrams = {}
+  #     ary.each do |row|
+  #       ngrams = ngrams_from_row(row, args[:string_dimension], args[:n])
+  #       ngrams.each do |ngram|
+  #         sum_ngram_values(summed_ngrams, ngram, row, args[:numeric_dimensions])
+  #       end
+  #     end
+  #     summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum) } 
+  #     # summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum).merge({roi: (sum["cost"] == 0 ? 0 : (sum["total_conv_value"] / sum["cost"])) }) } 
+  #   end
+  # end
 
-  def self.sum_ngram_values(totals_hash, ngram, row, dimensions)
-    if totals_hash[ngram]
-      dimensions.each do |dim|
-        totals_hash[ngram.to_sym][dim] += normalize_numeric_field(row[dim])
-      end
-    else
-      totals_hash[ngram.to_sym] = {}
-      dimensions.each do |dim|
-        totals_hash[ngram.to_sym][dim] = normalize_numeric_field(row[dim])
-      end
-    end
-  end
+  # def self.sum_ngram_values(totals_hash, ngram, row, dimensions)
+  #   if totals_hash[ngram]
+  #     dimensions.each do |dim|
+  #       totals_hash[ngram.to_sym][dim] += normalize_numeric_field(row[dim])
+  #     end
+  #   else
+  #     totals_hash[ngram.to_sym] = {}
+  #     dimensions.each do |dim|
+  #       totals_hash[ngram.to_sym][dim] = normalize_numeric_field(row[dim])
+  #     end
+  #   end
+  # end
 
-  def self.normalize_numeric_field(value)
-    if value.is_a?(Numeric)
-      value
-    else
-      value.to_f
-    end
-  end
+  # def self.normalize_numeric_field(value)
+  #   if value.is_a?(Numeric)
+  #     value
+  #   else
+  #     value.to_f
+  #   end
+  # end
 
   def self.filter_by_word_number(ary, args)
     ary.keep_if{|row| args[:n] <= row[args[:string_dimension]].to_s.split(' ').length}
@@ -199,21 +199,21 @@ module ReportCruncher
     row[string_dimension].to_s.split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
   end 
 
-  def self.examples_of_substring_match(ary, substring_ary)
-    with_benchmark("examples of substring match") do
-      matches = []
-      substring_ary.each do |substring|
-        ary.each do |row|
-          if substring_match?(substring, row[:search_term])
-            matches << {matcher: substring.join(' '), matches: row[:search_term]}
-          else
-            # do nothing
-          end
-        end
-      end
-      matches
-    end
-  end
+  # def self.examples_of_substring_match(ary, substring_ary)
+  #   with_benchmark("examples of substring match") do
+  #     matches = []
+  #     substring_ary.each do |substring|
+  #       ary.each do |row|
+  #         if substring_match?(substring, row[:search_term])
+  #           matches << {matcher: substring.join(' '), matches: row[:search_term]}
+  #         else
+  #           # do nothing
+  #         end
+  #       end
+  #     end
+  #     matches
+  #   end
+  # end
 
   def self.frequency_of_unordered_n_tuples(ary, args)
     with_benchmark("set unordered ntuple calculation time: ") do 
@@ -265,27 +265,27 @@ module ReportCruncher
 
 private
 
-  def self.sort_array(sort_rules)
-    string_array = "["
-    sort_rules.map do |rule|
-      rule_string = ""
-      rule_string += "-" if rule[:direction] == "desc"
-      rule_string += "(e[:#{rule[:dimension]}])#{rule[:conversion]},"
-      string_array += rule_string
-    end
+  # def self.sort_array(sort_rules)
+  #   string_array = "["
+  #   sort_rules.map do |rule|
+  #     rule_string = ""
+  #     rule_string += "-" if rule[:direction] == "desc"
+  #     rule_string += "(e[:#{rule[:dimension]}])#{rule[:conversion]},"
+  #     string_array += rule_string
+  #   end
 
-    string_array = string_array.chomp(',')
-    string_array += "]"
-    string_array
-  end
+  #   string_array = string_array.chomp(',')
+  #   string_array += "]"
+  #   string_array
+  # end
 
-  def self.format_for_view(results_hash)
-    entries = []
-    results_hash.each do |k,v|
-      entries << {ngram: k.to_s, instances: v}
-    end
-    entries
-  end
+  # def self.format_for_view(results_hash)
+  #   entries = []
+  #   results_hash.each do |k,v|
+  #     entries << {ngram: k.to_s, instances: v}
+  #   end
+  #   entries
+  # end
 
   def self.sum_rows(row_group)
     if row_group && row_group.length > 0  
@@ -305,25 +305,25 @@ private
     end
   end
 
-  def self.group_rows(rows, dimension, values)
-    row_groups = Set.new
-    values.each do |value|
-      row_groups << rows.select {|row| row[dimension.to_sym] == value}
-    end
-    row_groups
-  end
+  # def self.group_rows(rows, dimension, values)
+  #   row_groups = Set.new
+  #   values.each do |value|
+  #     row_groups << rows.select {|row| row[dimension.to_sym] == value}
+  #   end
+  #   row_groups
+  # end
 
-  def self.two_dimension_group_rows(rows, grouping_array) #for only two dimensions now
-    row_groups = Set.new
-    outer_dimension = grouping_array[0][:dimension]
-    inner_dimension = grouping_array[1][:dimension]
-    grouping_array[0][:values].each do |outer_value|
-      grouping_array[1][:values].each do |inner_value|
-        row_groups << rows.select {|row| row[outer_dimension.to_sym] == outer_value && row[inner_dimension.to_sym] == inner_value}
-      end
-    end
-    row_groups
-  end
+  # def self.two_dimension_group_rows(rows, grouping_array) #for only two dimensions now
+  #   row_groups = Set.new
+  #   outer_dimension = grouping_array[0][:dimension]
+  #   inner_dimension = grouping_array[1][:dimension]
+  #   grouping_array[0][:values].each do |outer_value|
+  #     grouping_array[1][:values].each do |inner_value|
+  #       row_groups << rows.select {|row| row[outer_dimension.to_sym] == outer_value && row[inner_dimension.to_sym] == inner_value}
+  #     end
+  #   end
+  #   row_groups
+  # end
 
   def self.with_benchmark(msg = "")
     time1 = Time.now

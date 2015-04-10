@@ -1,86 +1,117 @@
-class Ngrams
+module Ngrams
 
-	def self.high_frequency_n_tuples(n, hash_table)
-		with_benchmark("ntuple calculation time: ") do 
-			if n == 1
-				list_of_words = {}
-				hash_table.each	do |row|
-					phrase = row[:search_term]
-					phrase.split(" ").each do |word|
-						list_of_words[word.to_sym] ? list_of_words[word.to_sym] += row[:converted_clicks] : list_of_words[word.to_sym] = row[:converted_clicks]
-					end
-				end
-				list_of_words = list_of_words.sort_by{|word,times| -1*times}
-				format_for_view(list_of_words)
-			elsif n==2
-				list_of_bigrams = {}
-				hash_table.each	do |row|
-					bigrams = row[:search_term].split(' ').each_cons(2).to_a.map.each{|twotuple| twotuple.join(" ")}
-					bigrams.each do |bigram|
-						list_of_bigrams[bigram.to_sym] ? list_of_bigrams[bigram.to_sym] += row[:converted_clicks] : list_of_bigrams[bigram.to_sym] = row[:converted_clicks]
-					end
-				end
-				list_of_bigrams = list_of_bigrams.sort_by{|bigram,times| -1*times}
-				format_for_view(list_of_bigrams[0..100])
-			end
-		end
-		
+	def self.execute(ary, args, dimensions)
+    calculated_dimensions = dimensions.select{|dd| dd[:retrieve_from] == "calculation"}
+    
+    if args["order"] == "ordered"
+      ordered_ngrams(ary, args, dimensions)
+    elsif args["order"] == "unordered"
+      unordered_ngrams(ary, args, dimensions)
+    else
+      ary
+    end
+
 	end
 
-	def self.frequency_of_unordered_n_tuples(n, hash_table)
-		with_benchmark("set unordered ntuple calculation time: ") do 
-		
-			list_of_ntuples = []
-			hash_table.each do |row|
-				list_of_ntuples << unordered_ntuples(2, row)
-			end
+	def self.form(algorithm)
+    string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
+    string_dimensions_names = string_dimensions.map{|dim| dim[:name]}
 
-			ntuple_count = {}
-
-			list_of_ntuples.each do |ntuple_group|
-				ntuple_group.each do |ntuple|
-					string_name = ""
-					ntuple.map do |word|
-						string_name << (word + " ")
-					end
-					ntuple_count[string_name.to_sym] = 0
-					list_of_ntuples.each do |inner_ntuple_group|
-						inner_ntuple_group.each do |inner_ntuple|
-							ntuple_count[string_name.to_sym] += 1 if ntuple == inner_ntuple 
-							inner_ntuple_group.delete(inner_ntuple) if ntuple == inner_ntuple
-						end
-					end
-				end
-			end
-
-			ntuple_count = ntuple_count.sort_by{|ntuple,times| -1*times}
-			format_for_view(ntuple_count[0..100])
-		end
+    form_string = "
+      <select ng-model='func.args.string_dimension'>"
+        string_dimensions_names.each do |sdn|  
+          form_string += "<option>#{sdn}</option>"
+        end
+      form_string += "
+      </select>
+      <select ng-model='func.args.word_order'>
+        <option>ordered</option>
+        <option>unordered</option>
+      </select>
+      <input type='number' ng-model='func.args.n'/>"
+      form_string
 	end
 
-	def self.unordered_ntuples(n, row)
-		words = row[:search_term].split(" ")
-		combinations = words.combination(n).to_set
-		combinations
-	end
+	def self.ordered_ngrams(ary, args, dimensions)
+    summed_ngrams = {}
+    
+    ary.each do |row|
+      ngrams = ngrams_from_row(row, args["string_dimension"], args["n"])
+      ngrams.each do |ngram|
+        sum_ngram_values(summed_ngrams, ngram, row, args[:numeric_dimensions])
+      end
+    end
 
-	def self.format_for_view(results_hash)
-		entries = []
-		results_hash.each do |k,v|
-			entries << k.to_s + ": " + "#{v.to_s} instances"
-		end
-		entries
-	end
+    summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum) } 
+  end
 
-	private
+  def self.sum_ngram_values(totals_hash, ngram, row, dimensions)
+    if totals_hash[ngram]
+      dimensions.each do |dim|
+        totals_hash[ngram.to_sym][dim] += normalize_numeric_field(row[dim])
+      end
+    else
+      totals_hash[ngram.to_sym] = {}
+      dimensions.each do |dim|
+        totals_hash[ngram.to_sym][dim] = normalize_numeric_field(row[dim])
+      end
+    end
+  end
 
-	def self.with_benchmark(msg = "")
-		time1 = Time.now
-			result = yield
-		time2 = Time.now
+  def self.ngrams_from_row(row, string_dimension, n)
+    row[string_dimension].to_s.split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
+  end 
 
-		ap msg + (time2 - time1).to_s
+  #
+  # Unordered Ngrams
+  #
 
-		result
-	end
+  def self.unordered_ngrams(ary, args)
+    with_benchmark("set unordered ntuple calculation time: ") do 
+      numeric_counts_default = {}
+      args[:numeric_dimensions].each{|dim| numeric_counts_default.merge!({dim => 0})}
+
+      set_of_ntuples = full_ntuple_set_for_rows(ary,args[:n], args[:string_dimension])
+      ntuple_count = []
+
+      set_of_ntuples.each do |ntuple|
+        string_name = ""
+        ntuple.map {|word| string_name << (word + " ")}
+        ntuple_hash = {name: string_name, count: 0}.merge!(numeric_counts_default)
+
+        ary.each do |row|
+          if substring_match?(ntuple, row[args[:string_dimension].to_sym])
+            ntuple_hash[:count] += 1
+            args[:numeric_dimensions].each{ |dim| ntuple_hash[dim] += row[dim] }
+          else
+            # do nothing
+          end
+        end
+        ntuple_count << ntuple_hash
+      end
+
+      ntuple_count
+    end
+  end
+
+  def self.substring_match?(set_of_strings, string)
+    array_of_words = string.to_s.split(" ")
+    set_of_strings.each do |s|
+      return false unless array_of_words.include?(s)
+    end
+    true
+  end
+
+  def self.full_ntuple_set_for_rows(ary, n, string_dimension)      
+    full_ntuple_set = Set.new
+    ary.each {|row| full_ntuple_set = full_ntuple_set.merge(unordered_ntuples_in_string(n, row[string_dimension]))}
+    full_ntuple_set
+  end
+
+  def self.unordered_ntuples_in_string(n, string)
+    words = string.split(" ")
+    combination_array = words.combination(n)
+    combination_array.map{|combination| combination.to_set}.to_set # a set of all sets of (unordered) ntuples from row.
+  end
+
 end
