@@ -49,37 +49,12 @@ module Group
         dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
       end 
       ary = remove_dimensions(ary, dimensions_to_remove)
-      
-      puts "removed dimensions in"
-      next_time = Time.now
-      ap (next_time - start_time)
-      puts "seconds"
-      start_time = next_time
 
       all_values = ary.map{|row| row[dimension]}.uniq
-
-      puts "mapped all values in"
-      next_time = Time.now
-      ap (next_time - start_time)
-      puts "seconds"
-      start_time = next_time
-
       row_groups = group_rows(ary, dimension, all_values)
-
-      puts "built row groups in"
-      next_time = Time.now
-      ap (next_time - start_time)
-      puts "seconds"
-      start_time = next_time
 
       summed_array = []
       row_groups.each {|row_group| summed_array << sum_rows(row_group)}
-
-      puts "summed row groups in"
-      next_time = Time.now
-      ap (next_time - start_time)
-      puts "seconds"
-      start_time = next_time
 
       summed_array
   end

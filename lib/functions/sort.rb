@@ -47,7 +47,7 @@ module Sort
 			end
 		end
 n=0
-	    ary.sort{|x,y| ap n; n+=1; @@sorting_arrays.call(x,y,arguments) }
+	    ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
 	end
 
 	@@sorting_arrays = lambda do |x,y,rules_hash|
