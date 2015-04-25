@@ -62,6 +62,23 @@ module Ngrams
     end
   end
 
+  def self.sum_unordered_ngram_values(totals_hash, ngram, row, dimensions)
+    ngram_array = ngram.split(' ')
+    totals_hash_match = totals_hash.select{|key, value| key.split(' ') - ngram_array == []}
+    totals_hash_key = (totals_hash_match.blank? ? nil : totals_hash_match.keys[0])
+
+    if totals_hash_key
+      dimensions.each do |dim|
+        totals_hash[totals_hash_key][dim[:name]] += row[dim[:name]]
+      end
+    else
+      totals_hash[ngram] = {}
+      dimensions.each do |dim|
+        totals_hash[ngram][dim[:name]] = row[dim[:name]]
+      end
+    end
+  end
+
   def self.ngrams_from_row(row, string_dimension, n)
     row[string_dimension].to_s.split(' ').each_cons(n).to_a.map.each{|ntuple| ntuple.join(" ")}
   end 
@@ -70,28 +87,61 @@ module Ngrams
   # Unordered Ngrams
   #
 
-  def self.unordered_ngrams(ary, args)
-    with_benchmark("set unordered ntuple calculation time: ") do 
-      numeric_counts_default = {}
-      args[:numeric_dimensions].each{|dim| numeric_counts_default.merge!({dim => 0})}
+  # def self.unordered_ngrams(ary, args, dimensions)
+  #   with_benchmark("set unordered ntuple calculation time: ") do
+  #     ary.keep_if{|row| row[args["string_dimension"]].to_s.split(" ").length >= args["n"] }
+  #     p ary.length
+  #     numeric_dimensions = dimensions.select{|dim| (dim[:data_type] == "decimal" || dim[:data_type] == "integer") && dim[:retrieve_from] == "datastore"}
+  #     # remove any dimensions that don't appear in the ary
+  #     numeric_dimensions.keep_if{|nd| ary[0].keys.include? nd[:name] }
+  #     numeric_dimension_names = numeric_dimensions.map{|nd| nd[:name]}
+      
+  #     summed_ngrams = {}
+  #     n= 0
+  #     ary.each do |row|
+  #       n += 1
+  #       ngrams = ngrams_from_row(row, args["string_dimension"], args["n"])
+  #       ngrams.each do |ngram|
+  #         sum_unordered_ngram_values(summed_ngrams, ngram, row, numeric_dimensions)
+  #       end
+  #       ap summed_ngrams.length if n%100 == 1 ; p n if n%100 == 1
+  #     end
 
-      set_of_ntuples = full_ntuple_set_for_rows(ary,args[:n], args[:string_dimension])
+  #     summed_ngrams.map{|ntuple, sum| {ngram: ntuple.to_s}.merge(sum) } 
+  #   end
+  # end
+
+  def self.unordered_ngrams(ary, args, dimensions)
+    with_benchmark("set unordered ntuple calculation time: ") do 
+      numeric_dimensions = dimensions.select{|dim| (dim[:data_type] == "decimal" || dim[:data_type] == "integer") && dim[:retrieve_from] == "datastore"}
+      # remove any dimensions that don't appear in the ary
+      numeric_dimensions.keep_if{|nd| ary[0].keys.include? nd[:name] }
+      numeric_dimension_names = numeric_dimensions.map{|nd| nd[:name]}
+      
+      numeric_counts_default = {}
+      numeric_dimension_names.
+      each{|dim| numeric_counts_default.merge!({dim => 0})}
+
+      set_of_ntuples = full_ntuple_set_for_rows(ary, args["n"], args["string_dimension"])
       ntuple_count = []
 
+      n = 0
       set_of_ntuples.each do |ntuple|
-        string_name = ""
-        ntuple.map {|word| string_name << (word + " ")}
+        n += 1
+        string_name = ntuple.to_a.join(' ')
         ntuple_hash = {name: string_name, count: 0}.merge!(numeric_counts_default)
 
         ary.each do |row|
-          if substring_match?(ntuple, row[args[:string_dimension].to_sym])
+          if ntuple == row[args["string_dimension"]].split(' ').to_set
             ntuple_hash[:count] += 1
-            args[:numeric_dimensions].each{ |dim| ntuple_hash[dim] += row[dim] }
+            numeric_dimension_names.each{ |ndn| ntuple_hash[ndn] += row[ndn] }
           else
             # do nothing
           end
         end
         ntuple_count << ntuple_hash
+        ap ntuple_count.length if n%100 == 1 ; p n if n%100 == 1
+        
       end
 
       ntuple_count
@@ -113,9 +163,17 @@ module Ngrams
   end
 
   def self.unordered_ntuples_in_string(n, string)
-    words = string.split(" ")
+    words = string.to_s.split(" ")
     combination_array = words.combination(n)
     combination_array.map{|combination| combination.to_set}.to_set # a set of all sets of (unordered) ntuples from row.
+  end
+
+  def self.with_benchmark(msg = "")
+    time1 = Time.now
+      output = yield
+    time2 = Time.now
+    ap msg + (time2 - time1).to_s
+    output
   end
 
 end

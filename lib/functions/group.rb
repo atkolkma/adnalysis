@@ -9,7 +9,13 @@ module Group
       end
     end
 
-    group_by_dimensions(ary, dimensions, dataset_dimensions)
+    if dimensions.length == 2
+      group_by_dimensions(ary, dimensions, dataset_dimensions)
+    elsif dimensions.length == 1
+      group_by_dimensions(ary, dimensions, dataset_dimensions)
+    else
+      ary
+    end
     
   end
 
@@ -37,15 +43,44 @@ module Group
   end
   
   def self.group_by_dimension(ary, dimension, dataset_dimensions)
+      start_time = Time.now
       dimensions_to_remove = []
       ary[0].each do |key, value|
         dimensions_to_remove << key unless value.is_a?(Numeric) || key.to_s == dimension.to_s
       end 
       ary = remove_dimensions(ary, dimensions_to_remove)
+      
+      puts "removed dimensions in"
+      next_time = Time.now
+      ap (next_time - start_time)
+      puts "seconds"
+      start_time = next_time
+
       all_values = ary.map{|row| row[dimension]}.uniq
+
+      puts "mapped all values in"
+      next_time = Time.now
+      ap (next_time - start_time)
+      puts "seconds"
+      start_time = next_time
+
       row_groups = group_rows(ary, dimension, all_values)
+
+      puts "built row groups in"
+      next_time = Time.now
+      ap (next_time - start_time)
+      puts "seconds"
+      start_time = next_time
+
       summed_array = []
       row_groups.each {|row_group| summed_array << sum_rows(row_group)}
+
+      puts "summed row groups in"
+      next_time = Time.now
+      ap (next_time - start_time)
+      puts "seconds"
+      start_time = next_time
+
       summed_array
   end
 
@@ -65,6 +100,7 @@ module Group
         dimensions_to_remove << key unless value.is_a?(Numeric) || dimensions.include?(key.to_s)
       end
       ary = remove_dimensions(ary, dimensions_to_remove)
+
       grouping_array = []
       dimensions.each do |dim|
         dim_values = ary.map{|row| row[dim]}.uniq
@@ -87,11 +123,13 @@ module Group
   end
 
   def self.group_rows(rows, dimension, values)
-    row_groups = Set.new
-    values.each do |value|
-      row_groups << rows.select {|row| row[dimension] == value}
+    row_groups = Hash[values.map {|k| [k, []]}]
+    ap row_groups[0..100]
+    rows.each do |row|
+      row_groups[row[dimension]] << row if row_groups[row[dimension]]
     end
-    row_groups
+
+    row_groups.values
   end
 
   def self.two_dimension_group_rows(rows, grouping_array) #for only two dimensions now

@@ -21,4 +21,13 @@ class Report < ActiveRecord::Base
 	def file_names
 		data_set.source_files.map{|sf| sf.remote_path}
 	end
+
+
+	def data_set_name
+		if data_set
+			data_set.name
+		else
+			"no data set found"
+		end
+	end
 end

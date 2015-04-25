@@ -1,4 +1,4 @@
-require 'erb'
+	require 'erb'
 
 module Sort
 
@@ -46,8 +46,8 @@ module Sort
 				ary = ReportCruncher.add_calculated_dimension(ary, dim)
 			end
 		end
-
-	    ary.sort{|x,y| @@sorting_arrays.call(x,y,arguments) }
+n=0
+	    ary.sort{|x,y| ap n; n+=1; @@sorting_arrays.call(x,y,arguments) }
 	end
 
 	@@sorting_arrays = lambda do |x,y,rules_hash|

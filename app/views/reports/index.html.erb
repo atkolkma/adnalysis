@@ -16,7 +16,7 @@
     <% @reports.each do |report| %>
       <tr>
         <td><%= report.name %></td>
-        <td><%= report.data_set.name%></td>
+        <td><%= report.data_set_name%></td>
         <td><%= report.crunch_algorithm.name if report.crunch_algorithm%></td>
         <td><%= link_to 'View', report %></td>
         <td><%= link_to 'Settings', edit_report_path(report) %></td>
