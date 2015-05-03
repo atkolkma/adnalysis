@@ -9,15 +9,26 @@ module Group
       end
     end
 
-    if dimensions.length == 2
-      group_by_dimensions(ary, dimensions, dataset_dimensions)
-    elsif dimensions.length == 1
-      group_by_dimensions(ary, dimensions, dataset_dimensions)
-    else
-      ary
-    end
+    symbol_ary = convert_to_symbols(ary)
     
+    with_benchmark("with symbol keys") do 
+      100.times do |i|
+        x = symbol_ary
+        group_by_dimensions(x, dimensions, dataset_dimensions)
+      end
+    end
+
+    with_benchmark("with string keys") do 
+      100.times do |i|
+        x = ary
+        group_by_dimensions(x, dimensions, dataset_dimensions)
+        x
+      end
+    end
+      
   end
+
+
 
   def self.form(algorithm)
     string_dimensions = algorithm.dimensions.select{|dim| dim[:data_type] == "string"}
@@ -99,7 +110,6 @@ module Group
 
   def self.group_rows(rows, dimension, values)
     row_groups = Hash[values.map {|k| [k, []]}]
-    ap row_groups[0..100]
     rows.each do |row|
       row_groups[row[dimension]] << row if row_groups[row[dimension]]
     end
@@ -133,6 +143,19 @@ module Group
       sum
     else
       []
+    end
+  end
+
+  def self.with_benchmark(annotation)
+    start = Time.now
+      result = yield
+    puts "elapsed group time #{annotation}: " + (Time.now - start).to_s
+    result
+  end
+
+  def self.convert_to_symbols(ary)
+    ary.map do |row|
+      row.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
     end
   end
 

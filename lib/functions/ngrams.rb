@@ -3,12 +3,27 @@ module Ngrams
 	def self.execute(ary, args, dimensions)
     calculated_dimensions = dimensions.select{|dd| dd[:retrieve_from] == "calculation"}
     
-    if args["word_order"] == "ordered"
-      ordered_ngrams(ary, args, dimensions)
-    elsif args["word_order"] == "unordered"
-      unordered_ngrams(ary, args, dimensions)
-    else
-      ary
+    ary = normalize_vals(ary)
+
+    with_benchmark("with symbol keys") do
+      sym_ary = convert_to_symbols(ary)
+      if args["word_order"] == "ordered"
+        ordered_ngrams(sym_ary, args, dimensions)
+      elsif args["word_order"] == "unordered"
+        unordered_ngrams(sym_ary, args, dimensions)
+      else
+        sym_ary
+      end
+    end
+
+    with_benchmark("with string keys") do
+      if args["word_order"] == "ordered"
+        ordered_ngrams(ary, args, dimensions)
+      elsif args["word_order"] == "unordered"
+        unordered_ngrams(ary, args, dimensions)
+      else
+        ary
+      end
     end
 
 	end
@@ -115,14 +130,15 @@ module Ngrams
     with_benchmark("set unordered ntuple calculation time: ") do 
       numeric_dimensions = dimensions.select{|dim| (dim[:data_type] == "decimal" || dim[:data_type] == "integer") && dim[:retrieve_from] == "datastore"}
       # remove any dimensions that don't appear in the ary
-      numeric_dimensions.keep_if{|nd| ary[0].keys.include? nd[:name] }
-      numeric_dimension_names = numeric_dimensions.map{|nd| nd[:name]}
-      
+      numeric_dimensions.keep_if{|nd| ary[0].keys.include? nd[:name].to_sym }
+      numeric_dimension_names = numeric_dimensions.map{|nd| nd[:name].to_sym }
+      ap "numeric_dimensions"
+      ap numeric_dimension_names
       numeric_counts_default = {}
       numeric_dimension_names.
       each{|dim| numeric_counts_default.merge!({dim => 0})}
 
-      set_of_ntuples = full_ntuple_set_for_rows(ary, args["n"], args["string_dimension"])
+      set_of_ntuples = full_ntuple_set_for_rows(ary, args["n"], args["string_dimension"].to_sym)
       ntuple_count = []
 
       n = 0
@@ -132,7 +148,7 @@ module Ngrams
         ntuple_hash = {name: string_name, count: 0}.merge!(numeric_counts_default)
 
         ary.each do |row|
-          if ntuple == row[args["string_dimension"]].split(' ').to_set
+          if ntuple == row[args["string_dimension"].to_sym].split(' ').to_set
             ntuple_hash[:count] += 1
             numeric_dimension_names.each{ |ndn| ntuple_hash[ndn] += row[ndn] }
           else
@@ -163,7 +179,7 @@ module Ngrams
   end
 
   def self.unordered_ntuples_in_string(n, string)
-    words = string.to_s.split(" ")
+    words = string.to_s.split(" ").map{|word| word.to_sym}
     combination_array = words.combination(n)
     combination_array.map{|combination| combination.to_set}.to_set # a set of all sets of (unordered) ntuples from row.
   end
@@ -174,6 +190,26 @@ module Ngrams
     time2 = Time.now
     ap msg + (time2 - time1).to_s
     output
+  end
+
+  def self.convert_to_symbols(ary)
+    ary.map do |row|
+      row.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+    end
+  end
+
+  def self.normalize_vals(ary)
+    ary.map do |row|
+      row.inject({}){|memo,(k,v)| memo[k] = normalize(k,v); memo}
+    end
+  end
+
+  def self.normalize(k,val)
+    if (k == "cost" || k == "total_conv_value") && (val.is_a? String)
+      val.gsub(',','').to_f
+    else
+      val
+    end
   end
 
 end

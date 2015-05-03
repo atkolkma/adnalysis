@@ -2,6 +2,9 @@ source 'https://rubygems.org'
 gem 'smarter_csv'
 gem 'awesome_print'
 
+gem 'oauth2'
+gem 'google-adwords-api'
+
 gem 'aws-sdk-v1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
